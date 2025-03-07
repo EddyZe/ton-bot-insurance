@@ -7,9 +7,7 @@ import org.telegram.telegrambots.longpolling.interfaces.LongPollingUpdateConsume
 import org.telegram.telegrambots.longpolling.starter.SpringLongPollingBot;
 import org.telegram.telegrambots.longpolling.util.LongPollingSingleThreadUpdateConsumer;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import ru.eddyz.telegrambot.clients.tonapi.ton.tonapi.sync.Tonapi;
-
-import java.util.List;
+import ru.eddyz.telegrambot.handlers.MessageHandler;
 
 
 @Getter
@@ -18,16 +16,15 @@ public class TelegramBot implements SpringLongPollingBot, LongPollingSingleThrea
 
     private final String botToken;
     private final String botUsername;
-    private final Tonapi tonapi;
 
-    @Value("${ton-api.account_id}")
-    private String accId;
+    private final MessageHandler messageHandler;
 
     public TelegramBot(@Value("${telegram.bot_token}") String botToken,
-                       @Value("${telegram.bot_username}") String botUsername, Tonapi tonapi) {
+                       @Value("${telegram.bot_username}") String botUsername,
+                       MessageHandler messageHandler) {
         this.botToken = botToken;
         this.botUsername = botUsername;
-        this.tonapi = tonapi;
+        this.messageHandler = messageHandler;
     }
 
 
@@ -38,13 +35,9 @@ public class TelegramBot implements SpringLongPollingBot, LongPollingSingleThrea
 
     @Override
     public void consume(Update update) {
-        if (update.hasMessage() && update.getMessage().hasText()) {
-            var acc = tonapi.getAccounts().getJettonsBalances(accId, null, null);
-            acc.getBalances().forEach(accBalance -> {
-                System.out.println(accBalance.getJetton().getName());
-                System.out.println(accBalance.getJetton().getSymbol());
-                System.out.println(accBalance.getBalance());
-            });
+        if (update.hasMessage()) {
+            messageHandler.handle(update.getMessage());
+            return;
         }
     }
 }

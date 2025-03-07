@@ -22,11 +22,11 @@ ton-api:
   token: ${TON_API_TOKEN}
   account_id: ${TON_API_ACCOUNT_ID}
 
-insirance:
+insurance:
   token:
-    name: ${INSIRANCE_TIKEN_NAME:$Barashek}
-    symbol: %{INSIRANCE_TIKEN_NAME:BARASHEK}
-  price: 1000
-  period: 30
+    name: ${INSURANCE_TOKEN_NAME:$Barashek}
+    symbol: ${INSURANCE_TOKEN_NAME:BARASHEK}
+  price: ${INSURANCE_PRICE:1000}
+  period: ${INSURANCE_DAYS:30}
 server:
   port: 8085
