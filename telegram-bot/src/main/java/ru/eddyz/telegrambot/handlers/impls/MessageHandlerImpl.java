@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.message.Message;
+import ru.eddyz.telegrambot.commands.ProfileCommand;
 import ru.eddyz.telegrambot.commands.StartCommand;
 import ru.eddyz.telegrambot.domain.enums.ButtonsText;
 import ru.eddyz.telegrambot.handlers.MessageHandler;
@@ -15,6 +16,7 @@ import ru.eddyz.telegrambot.handlers.MessageHandler;
 public class MessageHandlerImpl implements MessageHandler {
 
     private final StartCommand startCommand;
+    private final ProfileCommand profileCommand;
 
     @Override
     public void handle(Message message) {
@@ -32,7 +34,8 @@ public class MessageHandlerImpl implements MessageHandler {
         }
 
         if (text.equals(ButtonsText.PROFILE.toString())) {
-            //TODO Реализовать команду просмотра профиля
+            profileCommand.execute(message);
+            return;
         }
 
         if (text.equals(ButtonsText.WALLET.toString())) {
