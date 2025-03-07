@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: telegram-bot
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/tonbot}
+    username: ${DB_USER:postgres}
+    password: ${DB_PASSWORD:admin}
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        show_sql: true
+    hibernate:
+      ddl-auto: update
+
+telegram:
+  bot_token: ${BOT_TOKEN}
+  bot_username: ${BOT_USERNAME}
+
+ton-api:
+  token: ${TON_API_TOKEN}
+  account_id: ${TON_API_ACCOUNT_ID}
+
+insirance:
+  token:
+    name: ${INSIRANCE_TIKEN_NAME:$Barashek}
+    symbol: %{INSIRANCE_TIKEN_NAME:BARASHEK}
+  price: 1000
+  period: 30
+server:
+  port: 8085
