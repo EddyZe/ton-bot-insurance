@@ -7,6 +7,7 @@ import org.telegram.telegrambots.longpolling.interfaces.LongPollingUpdateConsume
 import org.telegram.telegrambots.longpolling.starter.SpringLongPollingBot;
 import org.telegram.telegrambots.longpolling.util.LongPollingSingleThreadUpdateConsumer;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import ru.eddyz.telegrambot.handlers.CallBackHandler;
 import ru.eddyz.telegrambot.handlers.MessageHandler;
 
 
@@ -18,13 +19,15 @@ public class TelegramBot implements SpringLongPollingBot, LongPollingSingleThrea
     private final String botUsername;
 
     private final MessageHandler messageHandler;
+    private final CallBackHandler callBackHandler;
 
     public TelegramBot(@Value("${telegram.bot_token}") String botToken,
                        @Value("${telegram.bot_username}") String botUsername,
-                       MessageHandler messageHandler) {
+                       MessageHandler messageHandler, CallBackHandler callBackHandler) {
         this.botToken = botToken;
         this.botUsername = botUsername;
         this.messageHandler = messageHandler;
+        this.callBackHandler = callBackHandler;
     }
 
 
@@ -35,8 +38,13 @@ public class TelegramBot implements SpringLongPollingBot, LongPollingSingleThrea
 
     @Override
     public void consume(Update update) {
-        if (update.hasMessage()) {
+        if (update.hasMessage() && update.getMessage().isUserMessage()) {
             messageHandler.handle(update.getMessage());
+            return;
+        }
+
+        if (update.hasCallbackQuery()) {
+            callBackHandler.handle(update.getCallbackQuery());
             return;
         }
     }

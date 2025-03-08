@@ -17,6 +17,7 @@ spring:
 telegram:
   bot_token: ${BOT_TOKEN}
   bot_username: ${BOT_USERNAME}
+  group_telegram_id: ${TELEGRAM_GROUP_ID:-1002214868381}
 
 ton-api:
   token: ${TON_API_TOKEN}

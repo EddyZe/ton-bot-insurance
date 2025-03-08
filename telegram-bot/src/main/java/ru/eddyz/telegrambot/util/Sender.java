@@ -3,6 +3,7 @@ package ru.eddyz.telegrambot.util;
 
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 
 
@@ -22,6 +23,13 @@ public class Sender {
                 .chatId(chatId)
                 .replyMarkup(keyboard)
                 .parseMode(ParseMode.HTML)
+                .build();
+    }
+
+    public static DeleteMessage deleteMessage(Long chatId, Integer messageId) {
+        return  DeleteMessage.builder()
+                .messageId(messageId)
+                .chatId(chatId)
                 .build();
     }
 }

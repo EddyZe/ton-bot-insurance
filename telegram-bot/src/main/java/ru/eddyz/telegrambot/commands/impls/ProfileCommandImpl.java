@@ -1,8 +1,10 @@
 package ru.eddyz.telegrambot.commands.impls;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.message.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
@@ -20,6 +22,7 @@ import java.time.format.DateTimeFormatter;
 @Slf4j
 @Component
 @RequiredArgsConstructor
+@Transactional
 public class ProfileCommandImpl implements ProfileCommand {
 
     private final TelegramClient telegramClient;
@@ -30,6 +33,12 @@ public class ProfileCommandImpl implements ProfileCommand {
     public void execute(CallbackQuery callbackQuery) {
         var chatId = callbackQuery.getMessage().getChatId();
         getProfile(chatId);
+
+        try {
+            telegramClient.execute(new AnswerCallbackQuery(callbackQuery.getId()));
+        } catch (TelegramApiException e) {
+            log.error("Error while executing profile command", e);
+        }
     }
 
     @Override
@@ -64,12 +73,16 @@ public class ProfileCommandImpl implements ProfileCommand {
                 <b>%s</b>
                 
                 <b>%s</b>
+                <b>Баланс: %.2f</b>
                 <b>Аккаунт создан: %s</b>
-                
+                <b>Историй: %d</b>
                 """.formatted(
                 ButtonsText.PROFILE.toString(),
                 user.getUsername(),
-                user.getCreatedAt().format(dtf)
+                user.getWallet() == null ? 0 :  user.getWallet().getBalance(),
+                user.getCreatedAt().format(dtf),
+                user.getHistories().size()
+
         );
     }
 
