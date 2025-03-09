@@ -3,6 +3,7 @@ package ru.eddyz.telegrambot.commands.impls;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.message.Message;
@@ -42,6 +43,8 @@ public class InstallWalletCommandImpl implements InstallWalletCommand {
             );
         }
 
+        answerCallBack(callbackQuery.getId());
+
     }
 
     @Override
@@ -69,6 +72,14 @@ public class InstallWalletCommandImpl implements InstallWalletCommand {
             openWalletCommand.execute(message);
         });
         DataStore.currentCommand.remove(chatId);
+    }
+
+    private void answerCallBack(String id) {
+        try {
+            telegramClient.execute(new AnswerCallbackQuery(id));
+        } catch (TelegramApiException e) {
+            log.error("error answer call back {}", e.getMessage());
+        }
     }
 
     private void sendMessage(Long chatId, String message) {

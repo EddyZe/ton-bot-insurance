@@ -12,7 +12,6 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
 import ru.eddyz.telegrambot.commands.ProfileCommand;
 import ru.eddyz.telegrambot.domain.entities.User;
-import ru.eddyz.telegrambot.domain.enums.ButtonsText;
 import ru.eddyz.telegrambot.repositories.UserRepository;
 import ru.eddyz.telegrambot.util.Sender;
 
@@ -70,16 +69,15 @@ public class ProfileCommandImpl implements ProfileCommand {
     private String generateMessage(User user) {
         var dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         return """
-                <b>%s</b>
+                <b>Профиль %s</b>
                 
-                <b>%s</b>
-                <b>Баланс: %.2f</b>
-                <b>Аккаунт создан: %s</b>
-                <b>Историй: %d</b>
+                <b>Баланс: </b> %.2f %s
+                <b>Аккаунт создан: </b>%s
+                <b>Историй: </b>%d
                 """.formatted(
-                ButtonsText.PROFILE.toString(),
                 user.getUsername(),
-                user.getWallet() == null ? 0 :  user.getWallet().getBalance(),
+                user.getWallet() == null ? 0 : user.getWallet().getBalance(),
+                user.getWallet() == null ? "" : user.getWallet().getToken(),
                 user.getCreatedAt().format(dtf),
                 user.getHistories().size()
 

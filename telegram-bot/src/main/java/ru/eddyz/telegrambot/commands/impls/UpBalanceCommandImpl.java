@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
@@ -53,12 +54,15 @@ public class UpBalanceCommandImpl implements UpBalanceCommand {
         String qrCodeData = """
                 ton://transfer/%s?text=%s""".formatted(adminWallet, comment);
 
+        answerCallBack(callbackQuery.getId());
+
         try {
             var qr = generateQRCode(qrCodeData, qrCodeFilePath.formatted(chatId));
 
             var message = "Отправьте сумму %s на которую хотите пополнить счет по данному QR коду. \n\n❗Укажите <b>%s</b> этот код в комментарии к платежу, если он не установился автоматически! \n\n❗ Внимание! Переводить нужно токен <b>%s</b>, иначе средства не будут начислены!";
             sendPhoto(chatId, qr, message.formatted(tokenName, chatId, tokenName));
             sendMessage(chatId, "<b>" + chatId + "</b>");
+            deleteMessage(chatId, callbackQuery.getMessage().getMessageId());
             try {
                 Files.delete(qr.toPath());
             } catch (IOException e) {
@@ -68,7 +72,22 @@ public class UpBalanceCommandImpl implements UpBalanceCommand {
             log.error("Failed to generate QR code", e);
             sendMessage(chatId, "Произошла ошибка при попытке пополнить счет. Попробуйте повторить попытку!");
         }
+    }
 
+    private void deleteMessage(Long chatId, Integer messageId) {
+        try {
+            telegramClient.execute(Sender.deleteMessage(chatId, messageId));
+        } catch (TelegramApiException e) {
+            log.error("Failed to delete message", e);
+        }
+    }
+
+    private void answerCallBack(String id) {
+        try {
+            telegramClient.execute(new AnswerCallbackQuery(id));
+        } catch (TelegramApiException e) {
+            log.error("Failed to answer callback", e);
+        }
     }
 
     private void sendPhoto(Long chatId, File file, String text) {
