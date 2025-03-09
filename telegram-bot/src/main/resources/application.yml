@@ -22,6 +22,7 @@ telegram:
 ton-api:
   token: ${TON_API_TOKEN}
   account_id: ${TON_API_ACCOUNT_ID}
+  token_address: ${TON_API_TOKEN_ADDRESS:EQDP42F8wAbBIqccOstlCpQCV73RfK0lClfOFBw2Nf8xm2DF}
 
 insurance:
   token:
@@ -29,5 +30,6 @@ insurance:
     symbol: ${INSURANCE_TOKEN_NAME:BARASHEK}
   price: ${INSURANCE_PRICE:1000}
   period: ${INSURANCE_DAYS:30}
+  admin_wallet: ${INSURANCE_ADMIN_WALLET:UQDcPT9cxG6idvFG5inOSHc8fc1EZJ1VROF_DKNiDY7hP4S-}
 server:
   port: 8085

@@ -121,10 +121,13 @@ public class OpenWalletCommandImpl implements OpenWalletCommand {
                 <b> %s </b>
                 
                 <b>Номер кошелька: </b> %s
+                <b>Баланс:</b> %.2f %s
                 <b>Баланс привязанного кошелька: </b> %.2f %s
                 """.formatted(
                 ButtonsText.WALLET.toString(),
                 wallet.getAccountId(),
+                wallet.getBalance(),
+                wallet.getToken(),
                 balance,
                 wallet.getToken()
         );

@@ -20,12 +20,24 @@ public class InlineKey {
                 .callbackData(ButtonsIds.INSTALL_NUMBER_WALLET.name())
                 .text(ButtonsText.INSTALL_WALLET.toString())
                 .build();
+        var upBalance = InlineKeyboardButton.builder()
+                .callbackData(ButtonsIds.UP_BALANCE.name())
+                .text(ButtonsText.UP_BALANCE.toString())
+                .build();
+        var withdrawMoney = InlineKeyboardButton.builder()
+                .callbackData(ButtonsIds.WITHDRAW_MONEY.name())
+                .text(ButtonsText.WITHDRAW_MONEY.toString())
+                .build();
         var closeWallet = InlineKeyboardButton.builder()
                 .callbackData(ButtonsIds.CLOSE_WALLET.name())
                 .text(ButtonsText.CLOSE.toString())
                 .build();
         return InlineKeyboardMarkup.builder()
-                .keyboard(List.of(new InlineKeyboardRow(installNumberWallet), new InlineKeyboardRow(closeWallet)))
+                .keyboard(List.of(
+                        new InlineKeyboardRow(installNumberWallet),
+                        new InlineKeyboardRow(upBalance),
+                        new InlineKeyboardRow(withdrawMoney),
+                        new InlineKeyboardRow(closeWallet)))
                 .build();
     }
 

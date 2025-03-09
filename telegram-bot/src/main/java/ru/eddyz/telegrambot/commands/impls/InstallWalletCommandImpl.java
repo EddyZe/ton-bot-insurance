@@ -1,0 +1,88 @@
+package ru.eddyz.telegrambot.commands.impls;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
+import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
+import org.telegram.telegrambots.meta.api.objects.message.Message;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import org.telegram.telegrambots.meta.generics.TelegramClient;
+import ru.eddyz.telegrambot.clients.tonapi.ton.exception.TONAPIBadRequestError;
+import ru.eddyz.telegrambot.clients.tonapi.ton.tonapi.sync.Tonapi;
+import ru.eddyz.telegrambot.commands.InstallWalletCommand;
+import ru.eddyz.telegrambot.domain.enums.ButtonsIds;
+import ru.eddyz.telegrambot.repositories.WalletRepository;
+import ru.eddyz.telegrambot.util.DataStore;
+import ru.eddyz.telegrambot.util.Sender;
+
+
+@Slf4j
+@Component
+@RequiredArgsConstructor
+public class InstallWalletCommandImpl implements InstallWalletCommand {
+
+    private final TelegramClient telegramClient;
+
+    private final WalletRepository walletRepository;
+
+    private final Tonapi tonapi;
+
+
+    @Override
+    public void execute(CallbackQuery callbackQuery) {
+        var chatId = callbackQuery.getMessage().getChatId();
+
+        if (!DataStore.currentCommand.containsKey(chatId)) {
+            DataStore.currentCommand.put(chatId, ButtonsIds.INSTALL_NUMBER_WALLET);
+            editMessage(chatId, callbackQuery.getMessage().getMessageId(),
+                    "Отправить номер кошелька, который хотите привязать к аккаунту. Обратите внимание, что баланс кошелька отображает токен, который мы используем.");
+        }
+
+    }
+
+    @Override
+    public void execute(Message message) {
+        var chatId = message.getChatId();
+        var numberWallet = message.getText();
+
+        try {
+            tonapi.getAccounts().getInfo(numberWallet);
+        } catch (TONAPIBadRequestError e) {
+            log.error("Invalid ton wallet {}", e.getMessage());
+            sendMessage(chatId, "Введите существующий номер кошелька!");
+            return;
+        }
+
+        walletRepository.findByUserTelegramId(chatId).ifPresent(wallet -> {
+            wallet.setAccountId(numberWallet);
+            walletRepository.save(wallet);
+            sendMessage(chatId, "Номер счета успешно установлен.");
+        });
+        DataStore.currentCommand.remove(chatId);
+    }
+
+    private void sendMessage(Long chatId, String message) {
+        var sendMessage = Sender.sendMessage(chatId, message);
+
+        try {
+            telegramClient.execute(sendMessage);
+        } catch (TelegramApiException e) {
+            log.error("Error sendMessage to installWalletCommand", e);
+        }
+    }
+
+    private void editMessage(Long chatId, Integer messageId, String message) {
+        var editMessage = EditMessageText.builder()
+                .messageId(messageId)
+                .chatId(chatId)
+                .text(message)
+                .build();
+
+        try {
+            telegramClient.execute(editMessage);
+        } catch (TelegramApiException e) {
+            log.error("Error editMessage to InstallWalletCommandImpl", e);
+        }
+    }
+}
