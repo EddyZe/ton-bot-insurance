@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "wallet")
@@ -21,7 +22,7 @@ public class Wallet {
 
     @Column(nullable = false)
     private String token;
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String accountId;
     @Column(nullable = false)
     private LocalDateTime createdAt;
@@ -36,4 +37,6 @@ public class Wallet {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
+    @OneToMany(mappedBy = "wallet")
+    private List<Withdraw> withdraws;
 }

@@ -1,7 +1,6 @@
 package ru.eddyz.telegrambot.util;
 
 
-import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -28,6 +27,10 @@ public class InlineKey {
                 .callbackData(ButtonsIds.WITHDRAW_MONEY.name())
                 .text(ButtonsText.WITHDRAW_MONEY.toString())
                 .build();
+        var withdrawHistory = InlineKeyboardButton.builder()
+                .callbackData(ButtonsIds.WITHDRAW_MONEY_HISTORY.name())
+                .text(ButtonsText.WITHDRAW_MONEY_HISTORY.toString())
+                .build();
         var closeWallet = InlineKeyboardButton.builder()
                 .callbackData(ButtonsIds.CLOSE_WALLET.name())
                 .text(ButtonsText.CLOSE.toString())
@@ -36,7 +39,7 @@ public class InlineKey {
                 .keyboard(List.of(
                         new InlineKeyboardRow(installNumberWallet),
                         new InlineKeyboardRow(upBalance),
-                        new InlineKeyboardRow(withdrawMoney),
+                        new InlineKeyboardRow(withdrawMoney, withdrawHistory),
                         new InlineKeyboardRow(closeWallet)))
                 .build();
     }

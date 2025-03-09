@@ -1,9 +1,7 @@
 package ru.eddyz.telegrambot.handlers.impls;
 
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.glassfish.grizzly.utils.DataStructures;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.message.Message;
 import ru.eddyz.telegrambot.commands.InstallWalletCommand;
@@ -42,11 +40,13 @@ public class MessageHandlerImpl implements MessageHandler {
         }
 
         if (text.equals(ButtonsText.PROFILE.toString())) {
+            DataStore.currentCommand.remove(message.getChatId());
             profileCommand.execute(message);
             return;
         }
 
         if (text.equals(ButtonsText.WALLET.toString())) {
+            DataStore.currentCommand.remove(message.getChatId());
             openWalletCommand.execute(message);
             return;
         }

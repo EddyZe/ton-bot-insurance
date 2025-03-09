@@ -52,4 +52,6 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<HistoryFile> files;
 
+    @OneToMany(mappedBy = "user")
+    private List<Withdraw> withdraws;
 }

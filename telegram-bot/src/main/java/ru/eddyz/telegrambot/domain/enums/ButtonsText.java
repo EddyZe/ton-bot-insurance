@@ -13,8 +13,8 @@ public enum ButtonsText {
     INSTALL_WALLET("Установить / Изменить номер кошелька 👛"),
     UP_BALANCE("Пополнить баланс 💵"),
     WITHDRAW_MONEY("Вывести деньги 💸"),
-    CLOSE("Закрыть ❌")
-    ;
+    CLOSE("Закрыть ❌"),
+    WITHDRAW_MONEY_HISTORY("История снятий 📃");
     private final String cmd;
 
     ButtonsText(String cmd) {

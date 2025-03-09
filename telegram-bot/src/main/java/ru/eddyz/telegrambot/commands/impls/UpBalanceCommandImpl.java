@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
@@ -23,7 +24,6 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,14 +36,9 @@ public class UpBalanceCommandImpl implements UpBalanceCommand {
 
     @Value("${insurance.admin_wallet}")
     private String adminWallet;
-    @Value("${insurance.price}")
-    private Long price;
 
     @Value("${insurance.token.name}")
     private String tokenName;
-
-    @Value("${ton-api.token_address}")
-    private String tokenAddress;
 
     private final TelegramClient telegramClient;
 
@@ -54,11 +49,6 @@ public class UpBalanceCommandImpl implements UpBalanceCommand {
     public void execute(CallbackQuery callbackQuery) {
         var chatId = callbackQuery.getFrom().getId();
 
-        //ton://transfer/<destination-address>?
-        //    [nft=<nft-address>&]
-        //    [fee-amount=<nanocoins>&]
-        //    [forward-amount=<nanocoins>]
-
         String comment = URLEncoder.encode(chatId.toString(), StandardCharsets.UTF_8);
         String qrCodeData = """
                 ton://transfer/%s?text=%s""".formatted(adminWallet, comment);
@@ -66,15 +56,15 @@ public class UpBalanceCommandImpl implements UpBalanceCommand {
         try {
             var qr = generateQRCode(qrCodeData, qrCodeFilePath.formatted(chatId));
 
-            var message = "Отправьте сумму %s на которую хотите пополнить счет по данному QR коду. \n\n❗Укажите <a>%s<a> этот код в комментарии к платежу, если он не установился автоматически! \n\n❗ Внимание! Переводить нужно токен %s, иначе средства не будут начислены!";
+            var message = "Отправьте сумму %s на которую хотите пополнить счет по данному QR коду. \n\n❗Укажите <b>%s</b> этот код в комментарии к платежу, если он не установился автоматически! \n\n❗ Внимание! Переводить нужно токен <b>%s</b>, иначе средства не будут начислены!";
             sendPhoto(chatId, qr, message.formatted(tokenName, chatId, tokenName));
+            sendMessage(chatId, "<b>" + chatId + "</b>");
             try {
                 Files.delete(qr.toPath());
             } catch (IOException e) {
                 log.error("Error remove qrcode file", e);
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log.error("Failed to generate QR code", e);
             sendMessage(chatId, "Произошла ошибка при попытке пополнить счет. Попробуйте повторить попытку!");
         }
@@ -86,6 +76,7 @@ public class UpBalanceCommandImpl implements UpBalanceCommand {
             var sendPhoto = SendPhoto.builder()
                     .chatId(chatId)
                     .caption(text)
+                    .parseMode(ParseMode.HTML)
                     .photo(new InputFile(file))
                     .build();
 

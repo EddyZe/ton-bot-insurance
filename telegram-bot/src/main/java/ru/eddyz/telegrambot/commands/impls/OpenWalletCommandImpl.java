@@ -69,7 +69,7 @@ public class OpenWalletCommandImpl implements OpenWalletCommand {
             var newWallet = buildWallet(userOp.get());
             newWallet = walletRepository.save(newWallet);
 
-            sendMessage(chatId, generateMessage(newWallet, 0.), null);
+            sendMessage(chatId, generateMessage(newWallet, 0.), inlineKey.walletButtons());
             return;
         }
 

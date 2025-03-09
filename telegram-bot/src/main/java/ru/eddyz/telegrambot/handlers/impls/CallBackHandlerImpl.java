@@ -48,6 +48,10 @@ public class CallBackHandlerImpl implements CallBackHandler {
         if (data.equals(ButtonsIds.WITHDRAW_MONEY.name())) {
             //TODO Реализовать снятие средств
         }
+
+        if (data.equals(ButtonsIds.WITHDRAW_MONEY_HISTORY.name())) {
+            //TODO реализовать просмотр истории снятий
+        }
     }
 
 

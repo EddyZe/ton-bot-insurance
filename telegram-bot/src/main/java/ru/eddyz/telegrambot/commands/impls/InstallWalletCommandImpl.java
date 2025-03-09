@@ -11,6 +11,7 @@ import org.telegram.telegrambots.meta.generics.TelegramClient;
 import ru.eddyz.telegrambot.clients.tonapi.ton.exception.TONAPIBadRequestError;
 import ru.eddyz.telegrambot.clients.tonapi.ton.tonapi.sync.Tonapi;
 import ru.eddyz.telegrambot.commands.InstallWalletCommand;
+import ru.eddyz.telegrambot.commands.OpenWalletCommand;
 import ru.eddyz.telegrambot.domain.enums.ButtonsIds;
 import ru.eddyz.telegrambot.repositories.WalletRepository;
 import ru.eddyz.telegrambot.util.DataStore;
@@ -28,6 +29,8 @@ public class InstallWalletCommandImpl implements InstallWalletCommand {
 
     private final Tonapi tonapi;
 
+    private final OpenWalletCommand openWalletCommand;
+
 
     @Override
     public void execute(CallbackQuery callbackQuery) {
@@ -35,8 +38,8 @@ public class InstallWalletCommandImpl implements InstallWalletCommand {
 
         if (!DataStore.currentCommand.containsKey(chatId)) {
             DataStore.currentCommand.put(chatId, ButtonsIds.INSTALL_NUMBER_WALLET);
-            editMessage(chatId, callbackQuery.getMessage().getMessageId(),
-                    "Отправить номер кошелька, который хотите привязать к аккаунту. Обратите внимание, что баланс кошелька отображает токен, который мы используем.");
+            editMessage(chatId, callbackQuery.getMessage().getMessageId()
+            );
         }
 
     }
@@ -55,9 +58,15 @@ public class InstallWalletCommandImpl implements InstallWalletCommand {
         }
 
         walletRepository.findByUserTelegramId(chatId).ifPresent(wallet -> {
+            if (walletRepository.findByAccountId(numberWallet).isPresent()) {
+                sendMessage(chatId, "Данный кошелек уже привязан другим пользователем!");
+                openWalletCommand.execute(message);
+                return;
+            }
             wallet.setAccountId(numberWallet);
             walletRepository.save(wallet);
             sendMessage(chatId, "Номер счета успешно установлен.");
+            openWalletCommand.execute(message);
         });
         DataStore.currentCommand.remove(chatId);
     }
@@ -72,11 +81,11 @@ public class InstallWalletCommandImpl implements InstallWalletCommand {
         }
     }
 
-    private void editMessage(Long chatId, Integer messageId, String message) {
+    private void editMessage(Long chatId, Integer messageId) {
         var editMessage = EditMessageText.builder()
                 .messageId(messageId)
                 .chatId(chatId)
-                .text(message)
+                .text("Отправить номер кошелька, который хотите привязать к аккаунту. Обратите внимание, что баланс кошелька отображает токен, который мы используем.")
                 .build();
 
         try {

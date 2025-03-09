@@ -16,4 +16,6 @@ public interface WalletRepository extends JpaRepository<Wallet, Long> {
     @Query(value = "select w from Wallet w join User u on w.user.id = u.id where u.telegramChatId = :telegramId")
     Optional<Wallet> findByUserTelegramId(@Param("telegramId") Long telegramId);
 
+    Optional<Wallet> findByAccountId(String accountId);
+
 }
