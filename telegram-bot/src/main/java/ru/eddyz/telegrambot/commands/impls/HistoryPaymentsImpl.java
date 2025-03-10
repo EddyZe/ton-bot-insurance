@@ -93,7 +93,7 @@ public class HistoryPaymentsImpl implements HistoryPayments {
                     <b>ID платежа</b>: %d
                     <b>Сумма</b>: %.2f %s
                     <b>Дата</b>: %s
-                    ----------------------
+                    -------------------------------
                     """.formatted(
                             payment.getId(),
                     payment.getAmount(),

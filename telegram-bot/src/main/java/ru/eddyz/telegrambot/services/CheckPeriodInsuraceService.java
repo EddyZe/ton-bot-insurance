@@ -12,8 +12,6 @@ import ru.eddyz.telegrambot.repositories.InsuranceRepository;
 import ru.eddyz.telegrambot.util.Sender;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 
 @Slf4j
@@ -31,7 +29,7 @@ public class CheckPeriodInsuraceService {
 
         isurances.forEach(insurance -> {
             var currentDate = LocalDate.now();
-            var endDate =  insurance.getEndDate();
+            var endDate = insurance.getEndDate();
 
             if (currentDate.isAfter(endDate.toLocalDate())) {
                 try {

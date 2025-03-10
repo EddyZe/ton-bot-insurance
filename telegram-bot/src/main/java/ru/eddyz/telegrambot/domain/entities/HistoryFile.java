@@ -23,7 +23,6 @@ public class HistoryFile {
     @Column(nullable = false)
     private String telegramFileId;
 
-    @Column(nullable = false)
     private String telegramFileGroup;
 
     @Column(nullable = false)

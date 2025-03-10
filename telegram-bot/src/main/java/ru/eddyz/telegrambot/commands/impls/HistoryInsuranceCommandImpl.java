@@ -13,7 +13,6 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
 import ru.eddyz.telegrambot.commands.HistoryInsuranceCommand;
 import ru.eddyz.telegrambot.domain.entities.Insurance;
-import ru.eddyz.telegrambot.domain.entities.Payment;
 import ru.eddyz.telegrambot.repositories.InsuranceRepository;
 import ru.eddyz.telegrambot.util.DataStore;
 import ru.eddyz.telegrambot.util.InlineKey;

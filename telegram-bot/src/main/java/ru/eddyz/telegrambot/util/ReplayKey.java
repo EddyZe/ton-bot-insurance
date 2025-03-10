@@ -17,6 +17,7 @@ public class ReplayKey {
                 .resizeKeyboard(true)
                 .keyboard(
                         List.of(
+                                new KeyboardRow(ButtonsText.ADD_HISTORY.toString()),
                                 new KeyboardRow(ButtonsText.PROFILE.toString(), ButtonsText.WALLET.toString()),
                                 new KeyboardRow(ButtonsText.INSURANCE.toString(), ButtonsText.PAYMENTS.toString())
                         )
