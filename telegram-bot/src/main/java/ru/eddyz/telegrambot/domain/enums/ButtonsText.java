@@ -14,7 +14,11 @@ public enum ButtonsText {
     UP_BALANCE("Пополнить баланс 💵"),
     WITHDRAW_MONEY("Вывести деньги 💸"),
     CLOSE("Закрыть ❌"),
-    WITHDRAW_MONEY_HISTORY("История снятий 📃");
+    WITHDRAW_MONEY_HISTORY("История снятий 📃"),
+
+    //pages
+    NEXT_BUTTON("Далее ⏩"),
+    PREV_BUTTON("Назад ⏪");
     private final String cmd;
 
     ButtonsText(String cmd) {

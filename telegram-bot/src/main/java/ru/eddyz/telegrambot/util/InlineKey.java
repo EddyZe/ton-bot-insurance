@@ -8,6 +8,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import ru.eddyz.telegrambot.domain.enums.ButtonsIds;
 import ru.eddyz.telegrambot.domain.enums.ButtonsText;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -41,6 +42,37 @@ public class InlineKey {
                         new InlineKeyboardRow(upBalance),
                         new InlineKeyboardRow(withdrawMoney, withdrawHistory),
                         new InlineKeyboardRow(closeWallet)))
+                .build();
+    }
+
+    public InlineKeyboardMarkup withdrawHistory(int totalPages, int currentPage) {
+        var next = InlineKeyboardButton.builder()
+                .text(ButtonsText.NEXT_BUTTON.toString())
+                .callbackData(ButtonsIds.WITHDRAW_NEXT_BUTTON.name())
+                .build();
+
+        var previous = InlineKeyboardButton.builder()
+                .text(ButtonsText.PREV_BUTTON.toString())
+                .callbackData(ButtonsIds.WITHDRAW_PREV_BUTTON.name())
+                .build();
+
+        var close = InlineKeyboardButton.builder()
+                .text(ButtonsText.CLOSE.toString())
+                .callbackData(ButtonsIds.WITHDRAW_CLOSE.name())
+                .build();
+
+        var rows = new ArrayList<InlineKeyboardRow>();
+
+        if (currentPage > 0 && currentPage < totalPages)
+            rows.add(new InlineKeyboardRow(previous));
+
+        if (currentPage < totalPages - 1)
+            rows.add(new InlineKeyboardRow(next));
+
+        rows.add(new InlineKeyboardRow(close));
+
+        return InlineKeyboardMarkup.builder()
+                .keyboard(rows)
                 .build();
     }
 

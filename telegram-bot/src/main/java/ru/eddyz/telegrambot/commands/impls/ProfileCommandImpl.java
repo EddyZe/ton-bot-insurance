@@ -46,7 +46,6 @@ public class ProfileCommandImpl implements ProfileCommand {
         getProfile(chatId);
     }
 
-
     private void getProfile(Long chatId) {
         var userOp = userRepository.findByTelegramChatId(chatId);
 

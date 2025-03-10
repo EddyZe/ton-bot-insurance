@@ -10,4 +10,6 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByTelegramChatId(Long telegramChatId);
+
+    Optional<User> findByUsername(String username);
 }

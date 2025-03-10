@@ -37,11 +37,8 @@ public class InstallWalletCommandImpl implements InstallWalletCommand {
     public void execute(CallbackQuery callbackQuery) {
         var chatId = callbackQuery.getMessage().getChatId();
 
-        if (!DataStore.currentCommand.containsKey(chatId)) {
-            DataStore.currentCommand.put(chatId, ButtonsIds.INSTALL_NUMBER_WALLET);
-            editMessage(chatId, callbackQuery.getMessage().getMessageId()
-            );
-        }
+        DataStore.currentCommand.put(chatId, ButtonsIds.INSTALL_NUMBER_WALLET);
+        editMessage(chatId, callbackQuery.getMessage().getMessageId());
 
         answerCallBack(callbackQuery.getId());
 

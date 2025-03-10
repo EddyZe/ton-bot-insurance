@@ -25,7 +25,6 @@ public class StartCommandImpl implements StartCommand {
 
     private final UserRepository userRepository;
 
-
     @Override
     public void execute(Message message) {
         var chatId = message.getChatId();
@@ -33,7 +32,7 @@ public class StartCommandImpl implements StartCommand {
 
         saveUser(username, chatId);
 
-        try{
+        try {
             var sendMessage = Sender.sendMessage(chatId, generateMessage(), replayKey.mainMenu());
             telegramClient.execute(sendMessage);
         } catch (TelegramApiException e) {
@@ -45,7 +44,7 @@ public class StartCommandImpl implements StartCommand {
     private void saveUser(String username, Long chatId) {
         var userOptional = userRepository.findByTelegramChatId(chatId);
 
-        if  (userOptional.isEmpty()) {
+        if (userOptional.isEmpty()) {
             var user = buildUser(username, chatId);
             userRepository.save(user);
             return;
@@ -59,7 +58,7 @@ public class StartCommandImpl implements StartCommand {
         }
     }
 
-    private User buildUser(String username,  Long chatId) {
+    private User buildUser(String username, Long chatId) {
         return User.builder()
                 .username(username)
                 .telegramChatId(chatId)

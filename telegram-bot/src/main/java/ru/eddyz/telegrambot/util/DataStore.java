@@ -8,4 +8,6 @@ public class DataStore {
 
     public static Map<Long, Enum<?>> currentCommand = new HashMap<>();
 
+    public static Map<Long, Integer> currentPageHistoryWithdraw = new HashMap<>();
+
 }

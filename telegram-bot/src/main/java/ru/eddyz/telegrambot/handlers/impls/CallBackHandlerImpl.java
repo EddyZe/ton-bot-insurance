@@ -6,8 +6,10 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
+import ru.eddyz.telegrambot.commands.HistoryWithdrawCommand;
 import ru.eddyz.telegrambot.commands.InstallWalletCommand;
 import ru.eddyz.telegrambot.commands.UpBalanceCommand;
+import ru.eddyz.telegrambot.commands.WithdrawCommand;
 import ru.eddyz.telegrambot.domain.enums.ButtonsIds;
 import ru.eddyz.telegrambot.handlers.CallBackHandler;
 import ru.eddyz.telegrambot.util.Sender;
@@ -22,6 +24,8 @@ public class CallBackHandlerImpl implements CallBackHandler {
 
     private final InstallWalletCommand installWalletCommand;
     private final UpBalanceCommand upBalanceCommand;
+    private final WithdrawCommand withdrawCommand;
+    private final HistoryWithdrawCommand  historyWithdrawCommand;
 
 
     @Override
@@ -46,11 +50,30 @@ public class CallBackHandlerImpl implements CallBackHandler {
         }
 
         if (data.equals(ButtonsIds.WITHDRAW_MONEY.name())) {
-            //TODO Реализовать снятие средств
+            withdrawCommand.execute(callbackQuery);
+            return;
         }
 
         if (data.equals(ButtonsIds.WITHDRAW_MONEY_HISTORY.name())) {
-            //TODO реализовать просмотр истории снятий
+            historyWithdrawCommand.execute(callbackQuery);
+            return;
+        }
+
+        if (data.equals(ButtonsIds.WITHDRAW_NEXT_BUTTON.name())) {
+            historyWithdrawCommand.nextPage(callbackQuery.getFrom().getId());
+            historyWithdrawCommand.execute(callbackQuery);
+            return;
+        }
+
+        if (data.equals(ButtonsIds.WITHDRAW_PREV_BUTTON.name())) {
+            historyWithdrawCommand.prevPage(callbackQuery.getFrom().getId());
+            historyWithdrawCommand.execute(callbackQuery);
+            return;
+        }
+
+        if (data.equals(ButtonsIds.WITHDRAW_CLOSE.name())) {
+            deleteMessage(chatId, messageId);
+            return;
         }
     }
 
