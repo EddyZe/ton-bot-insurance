@@ -132,4 +132,22 @@ public class InlineKey {
                 .build();
     }
 
+    public InlineKeyboardMarkup insuranceHistory(int totalPages, int currentPage) {
+        var next = InlineKeyboardButton.builder()
+                .text(ButtonsText.NEXT_BUTTON.toString())
+                .callbackData(ButtonsIds.INSURANCE_NEXT_BUTTON.name())
+                .build();
+        var previous = InlineKeyboardButton.builder()
+                .text(ButtonsText.PREV_BUTTON.toString())
+                .callbackData(ButtonsIds.INSURANCE_PREV_BUTTON.name())
+                .build();
+
+        var close = InlineKeyboardButton.builder()
+                .text(ButtonsText.CLOSE.toString())
+                .callbackData(ButtonsIds.INSURANCE_CLOSE.name())
+                .build();
+
+        return generatePageMenuButton(totalPages, currentPage, next, previous, close);
+    }
+
 }

@@ -23,4 +23,7 @@ public enum ButtonsIds {
     INSURANCE_CLOSE,
     INSURANCE_HISTORY,
 
+    INSURANCE_NEXT_BUTTON,
+    INSURANCE_PREV_BUTTON,
+
 }

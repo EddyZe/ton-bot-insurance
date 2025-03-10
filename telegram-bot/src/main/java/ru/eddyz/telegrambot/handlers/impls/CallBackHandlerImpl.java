@@ -26,6 +26,7 @@ public class CallBackHandlerImpl implements CallBackHandler {
     private final HistoryWithdrawCommand historyWithdrawCommand;
     private final HistoryPayments historyPayments;
     private final BuyInsuranceCommand buyInsuranceCommand;
+    private final HistoryInsuranceCommand historyInsuranceCommand;
 
 
     @Override
@@ -101,10 +102,24 @@ public class CallBackHandlerImpl implements CallBackHandler {
         }
 
         if (data.equals(ButtonsIds.INSURANCE_HISTORY.name())) {
-            //TODO реализовать историю купленых страховок
+            historyInsuranceCommand.execute(callbackQuery);
+            return;
+        }
+
+        if (data.equals(ButtonsIds.INSURANCE_NEXT_BUTTON.name())) {
+            historyInsuranceCommand.nextPage(chatId);
+            historyInsuranceCommand.execute(callbackQuery);
+            return;
+        }
+
+        if (data.equals(ButtonsIds.INSURANCE_PREV_BUTTON.name())) {
+            historyInsuranceCommand.prevPage(chatId);
+            historyInsuranceCommand.execute(callbackQuery);
+            return;
         }
 
         if (data.equals(ButtonsIds.INSURANCE_CLOSE.name())) {
+            DataStore.currentPageHistoryInsurance.remove(chatId);
             deleteMessage(chatId, messageId);
             return;
         }
