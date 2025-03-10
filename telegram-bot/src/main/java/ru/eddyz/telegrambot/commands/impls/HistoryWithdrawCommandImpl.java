@@ -1,9 +1,7 @@
 package ru.eddyz.telegrambot.commands.impls;
 
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.query.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -19,12 +17,9 @@ import ru.eddyz.telegrambot.domain.entities.Withdraw;
 import ru.eddyz.telegrambot.repositories.WithdrawRepository;
 import ru.eddyz.telegrambot.util.DataStore;
 import ru.eddyz.telegrambot.util.InlineKey;
-import ru.eddyz.telegrambot.util.Sender;
 
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 @Slf4j
@@ -104,7 +99,7 @@ public class HistoryWithdrawCommandImpl implements HistoryWithdrawCommand {
     }
 
     public Integer currentPage(Long chatId) {
-        int currentPage = 0;
+        int currentPage;
         if (!DataStore.currentPageHistoryWithdraw.containsKey(chatId)) {
             DataStore.currentPageHistoryWithdraw.put(chatId, 0);
         }

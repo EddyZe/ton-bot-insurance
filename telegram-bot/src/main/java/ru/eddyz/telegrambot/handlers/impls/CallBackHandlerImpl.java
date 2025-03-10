@@ -1,17 +1,16 @@
 package ru.eddyz.telegrambot.handlers.impls;
 
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
-import ru.eddyz.telegrambot.commands.HistoryWithdrawCommand;
-import ru.eddyz.telegrambot.commands.InstallWalletCommand;
-import ru.eddyz.telegrambot.commands.UpBalanceCommand;
-import ru.eddyz.telegrambot.commands.WithdrawCommand;
+import ru.eddyz.telegrambot.commands.*;
 import ru.eddyz.telegrambot.domain.enums.ButtonsIds;
 import ru.eddyz.telegrambot.handlers.CallBackHandler;
+import ru.eddyz.telegrambot.util.DataStore;
 import ru.eddyz.telegrambot.util.Sender;
 
 
@@ -25,7 +24,8 @@ public class CallBackHandlerImpl implements CallBackHandler {
     private final InstallWalletCommand installWalletCommand;
     private final UpBalanceCommand upBalanceCommand;
     private final WithdrawCommand withdrawCommand;
-    private final HistoryWithdrawCommand  historyWithdrawCommand;
+    private final HistoryWithdrawCommand historyWithdrawCommand;
+    private final HistoryPayments historyPayments;
 
 
     @Override
@@ -72,6 +72,25 @@ public class CallBackHandlerImpl implements CallBackHandler {
         }
 
         if (data.equals(ButtonsIds.WITHDRAW_CLOSE.name())) {
+            DataStore.currentPageHistoryWithdraw.remove(chatId);
+            deleteMessage(chatId, messageId);
+            return;
+        }
+
+        if (data.equals(ButtonsIds.PAYMENT_NEXT_BUTTON.name())) {
+            historyPayments.nextPage(chatId);
+            historyPayments.execute(callbackQuery);
+            return;
+        }
+
+        if (data.equals(ButtonsIds.PAYMENT_PREV_BUTTON.name())) {
+            historyPayments.prevPage(chatId);
+            historyPayments.execute(callbackQuery);
+            return;
+        }
+
+        if (data.equals(ButtonsIds.PAYMENT_CLOSE.name())) {
+            DataStore.currentPageHistoryPayments.remove(chatId);
             deleteMessage(chatId, messageId);
             return;
         }

@@ -3,8 +3,8 @@ package ru.eddyz.telegrambot.domain.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import ru.eddyz.telegrambot.domain.enums.HistoryStatus;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -34,6 +34,9 @@ public class History {
     private LocalDateTime updatedAt;
     @Column(nullable = false)
     private Boolean approve;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private HistoryStatus historyStatus;
 
     @OneToMany(mappedBy = "history")
     private List<Vote> votes;

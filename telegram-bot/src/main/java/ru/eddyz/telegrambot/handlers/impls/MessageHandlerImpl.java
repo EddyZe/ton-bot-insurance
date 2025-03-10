@@ -21,6 +21,7 @@ public class MessageHandlerImpl implements MessageHandler {
     private final OpenWalletCommand openWalletCommand;
     private final InstallWalletCommand installWalletCommand;
     private final WithdrawCommand withdrawCommand;
+    private final HistoryPayments historyPayments;
 
     @Override
     public void handle(Message message) {
@@ -50,7 +51,8 @@ public class MessageHandlerImpl implements MessageHandler {
         }
 
         if (text.equals(ButtonsText.PAYMENTS.toString())) {
-            //TODO Реализовать команду историю платежей
+            historyPayments.execute(message);
+            return;
         }
 
         if (text.equals(ButtonsText.INSURANCE.toString())) {

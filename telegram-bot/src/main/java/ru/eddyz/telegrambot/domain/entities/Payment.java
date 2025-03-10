@@ -33,8 +33,4 @@ public class Payment {
     @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
-
-    @OneToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "insurance_id", referencedColumnName = "id")
-    private Insurance insurance;
 }

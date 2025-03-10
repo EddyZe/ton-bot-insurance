@@ -12,4 +12,9 @@ public enum ButtonsIds {
     WITHDRAW_NEXT_BUTTON,
     WITHDRAW_PREV_BUTTON,
     WITHDRAW_CLOSE,
+
+    //payments pages
+    PAYMENT_NEXT_BUTTON,
+    PAYMENT_PREV_BUTTON,
+    PAYMENT_CLOSE,
 }

@@ -61,6 +61,29 @@ public class InlineKey {
                 .callbackData(ButtonsIds.WITHDRAW_CLOSE.name())
                 .build();
 
+        return generatePageMenuButton(totalPages, currentPage, next, previous, close);
+    }
+
+    public InlineKeyboardMarkup paymentHistory(int totalPages, int currentPage) {
+        var next = InlineKeyboardButton.builder()
+                .text(ButtonsText.NEXT_BUTTON.toString())
+                .callbackData(ButtonsIds.PAYMENT_NEXT_BUTTON.name())
+                .build();
+
+        var previous = InlineKeyboardButton.builder()
+                .text(ButtonsText.PREV_BUTTON.toString())
+                .callbackData(ButtonsIds.PAYMENT_PREV_BUTTON.name())
+                .build();
+
+        var close = InlineKeyboardButton.builder()
+                .text(ButtonsText.CLOSE.toString())
+                .callbackData(ButtonsIds.PAYMENT_CLOSE.name())
+                .build();
+
+        return generatePageMenuButton(totalPages, currentPage, next, previous, close);
+    }
+
+    private InlineKeyboardMarkup generatePageMenuButton(int totalPages, int currentPage, InlineKeyboardButton next, InlineKeyboardButton previous, InlineKeyboardButton close) {
         var rows = new ArrayList<InlineKeyboardRow>();
 
         if (currentPage > 0 && currentPage < totalPages)

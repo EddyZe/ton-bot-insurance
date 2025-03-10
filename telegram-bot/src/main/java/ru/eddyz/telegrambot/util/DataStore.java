@@ -10,4 +10,6 @@ public class DataStore {
 
     public static Map<Long, Integer> currentPageHistoryWithdraw = new HashMap<>();
 
+    public static Map<Long, Integer> currentPageHistoryPayments = new HashMap<>();
+
 }
