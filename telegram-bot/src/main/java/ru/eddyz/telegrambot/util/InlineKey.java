@@ -1,6 +1,7 @@
 package ru.eddyz.telegrambot.util;
 
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -13,6 +14,13 @@ import java.util.List;
 
 @Component
 public class InlineKey {
+
+
+    @Value("${insurance.price}")
+    private String insurancePrice;
+
+    @Value("${insurance.token.name}")
+    private String insuranceCurrency;
 
 
     public InlineKeyboardMarkup walletButtons() {
@@ -96,6 +104,31 @@ public class InlineKey {
 
         return InlineKeyboardMarkup.builder()
                 .keyboard(rows)
+                .build();
+    }
+
+    public InlineKeyboardMarkup insuranceMenu() {
+        var buy = InlineKeyboardButton.builder()
+                .text(ButtonsText.BUY_INSURANCE.toString().formatted(insurancePrice, insuranceCurrency))
+                .callbackData(ButtonsIds.INSURANCE_BUY.name())
+                .build();
+
+        var history = InlineKeyboardButton.builder()
+                .text(ButtonsText.HISTORY_INSURANCE.toString())
+                .callbackData(ButtonsIds.INSURANCE_HISTORY.name())
+                .build();
+
+        var close =  InlineKeyboardButton.builder()
+                .text(ButtonsText.CLOSE.toString())
+                .callbackData(ButtonsIds.INSURANCE_CLOSE.name())
+                .build();
+
+        return InlineKeyboardMarkup.builder()
+                .keyboard(List.of(
+                        new InlineKeyboardRow(buy),
+                        new InlineKeyboardRow(history),
+                        new InlineKeyboardRow(close)
+                ))
                 .build();
     }
 

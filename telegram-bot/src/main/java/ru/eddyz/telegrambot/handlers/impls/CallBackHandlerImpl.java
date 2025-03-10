@@ -1,6 +1,5 @@
 package ru.eddyz.telegrambot.handlers.impls;
 
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -26,6 +25,7 @@ public class CallBackHandlerImpl implements CallBackHandler {
     private final WithdrawCommand withdrawCommand;
     private final HistoryWithdrawCommand historyWithdrawCommand;
     private final HistoryPayments historyPayments;
+    private final BuyInsuranceCommand buyInsuranceCommand;
 
 
     @Override
@@ -91,6 +91,20 @@ public class CallBackHandlerImpl implements CallBackHandler {
 
         if (data.equals(ButtonsIds.PAYMENT_CLOSE.name())) {
             DataStore.currentPageHistoryPayments.remove(chatId);
+            deleteMessage(chatId, messageId);
+            return;
+        }
+
+        if (data.equals(ButtonsIds.INSURANCE_BUY.name())) {
+            buyInsuranceCommand.execute(callbackQuery);
+            return;
+        }
+
+        if (data.equals(ButtonsIds.INSURANCE_HISTORY.name())) {
+            //TODO реализовать историю купленых страховок
+        }
+
+        if (data.equals(ButtonsIds.INSURANCE_CLOSE.name())) {
             deleteMessage(chatId, messageId);
             return;
         }

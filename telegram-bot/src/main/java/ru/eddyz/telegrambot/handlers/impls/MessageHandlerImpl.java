@@ -22,6 +22,7 @@ public class MessageHandlerImpl implements MessageHandler {
     private final InstallWalletCommand installWalletCommand;
     private final WithdrawCommand withdrawCommand;
     private final HistoryPayments historyPayments;
+    private final ShowInsuranceCommand showInsuranceCommand;
 
     @Override
     public void handle(Message message) {
@@ -56,7 +57,8 @@ public class MessageHandlerImpl implements MessageHandler {
         }
 
         if (text.equals(ButtonsText.INSURANCE.toString())) {
-            //TODO Реализовать команду просмотра страховки
+            showInsuranceCommand.execute(message);
+            return;
         }
 
         if (DataStore.currentCommand.containsKey(message.getChatId())) {

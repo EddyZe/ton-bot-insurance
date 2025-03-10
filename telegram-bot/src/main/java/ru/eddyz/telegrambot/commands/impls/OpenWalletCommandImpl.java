@@ -81,16 +81,20 @@ public class OpenWalletCommandImpl implements OpenWalletCommand {
 
 
         try {
-            var res = tonapi.getAccounts().getJettonsBalances(wallet.getAccountId(), null, null);
-            var balance = res.getBalances().stream()
-                    .filter(j -> j.getJetton().getName().equals(tokenName) || j.getJetton().getSymbol().equals(tokenSymbol))
-                    .map(j -> Double.parseDouble(j.getBalance()) / 1_000_000_000)
-                    .findFirst()
-                    .orElse(0.);
+            var balance = getBalanceTonWallet(wallet.getAccountId());
             sendMessage(chatId, generateMessage(wallet, balance), inlineKey.walletButtons());
         } catch (TONAPIBadRequestError e) {
             sendMessage(chatId, generateMessage(wallet, 0.), inlineKey.walletButtons());
         }
+    }
+
+    public Double getBalanceTonWallet(String addressTonWallet) {
+        var res = tonapi.getAccounts().getJettonsBalances(addressTonWallet, null, null);
+        return res.getBalances().stream()
+                .filter(j -> j.getJetton().getName().equals(tokenName) || j.getJetton().getSymbol().equals(tokenSymbol))
+                .map(j -> Double.parseDouble(j.getBalance()) / 1_000_000_000)
+                .findFirst()
+                .orElse(0.);
     }
 
 

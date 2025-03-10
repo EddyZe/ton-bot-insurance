@@ -17,4 +17,10 @@ public enum ButtonsIds {
     PAYMENT_NEXT_BUTTON,
     PAYMENT_PREV_BUTTON,
     PAYMENT_CLOSE,
+
+    //insurance
+    INSURANCE_BUY,
+    INSURANCE_CLOSE,
+    INSURANCE_HISTORY,
+
 }

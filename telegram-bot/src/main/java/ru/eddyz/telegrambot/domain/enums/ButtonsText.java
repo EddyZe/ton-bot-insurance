@@ -18,7 +18,11 @@ public enum ButtonsText {
 
     //pages
     NEXT_BUTTON("Далее ⏩"),
-    PREV_BUTTON("Назад ⏪");
+    PREV_BUTTON("Назад ⏪"),
+
+    //insurance
+    BUY_INSURANCE("Купить страховку %s %s 💵"),
+    HISTORY_INSURANCE("История покупок страховки 📂");
     private final String cmd;
 
     ButtonsText(String cmd) {
