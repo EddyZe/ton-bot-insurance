@@ -236,7 +236,7 @@ public class OpenHistoryListCommandImpl implements OpenHistoryListCommand {
                 <b>• Дата последнего обновления</b>: %s
                 """.formatted(
                 history.getDescription(),
-                history.getHistoryStatus().toString(),
+                history.getHistoryStatus().getStatus(),
                 history.getAmount(),
                 history.getCurrency(),
                 history.getCreatedAt().format(dtf),

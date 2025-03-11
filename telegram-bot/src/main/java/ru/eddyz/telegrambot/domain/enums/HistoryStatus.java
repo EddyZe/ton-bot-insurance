@@ -1,10 +1,14 @@
 package ru.eddyz.telegrambot.domain.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum HistoryStatus {
 
     PUBLISH("Опубликована"),
     DECLINE("Отклонена"),
-    AWAITING("Ожидает публикации");
+    AWAITING_PUBLISH("Ожидает публикации"),
+    AWAITING_APPROVED("Ожидает окончательного решения");
 
     private final String status;
 
@@ -12,8 +16,4 @@ public enum HistoryStatus {
         this.status = status;
     }
 
-    @Override
-    public String toString() {
-        return status;
-    }
 }

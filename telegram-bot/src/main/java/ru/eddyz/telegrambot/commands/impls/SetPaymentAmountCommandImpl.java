@@ -71,8 +71,9 @@ public class SetPaymentAmountCommandImpl implements SetPaymentAmountCommand {
 
             var history = historyOp.get();
 
-            if (history.getHistoryStatus() != HistoryStatus.AWAITING) {
+            if (history.getHistoryStatus() != HistoryStatus.AWAITING_PUBLISH) {
                 sendMessage(chatId, "❗ История уже была опубликована! Цену после публикации изменить нельзя!");
+                openHistoryListCommand.execute(message);
                 return;
             }
 

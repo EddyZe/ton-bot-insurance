@@ -8,6 +8,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardRow;
 import ru.eddyz.telegrambot.domain.enums.ButtonsIds;
 import ru.eddyz.telegrambot.domain.enums.ButtonsText;
+import ru.eddyz.telegrambot.domain.enums.VotingSolution;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -200,6 +201,47 @@ public class InlineKey {
 
         return InlineKeyboardMarkup.builder()
                 .keyboard(rows)
+                .build();
+    }
+
+    public InlineKeyboardMarkup votes(Long historyId) {
+        var yes = InlineKeyboardButton.builder()
+                .text(VotingSolution.VOTING_YES.toString())
+                .callbackData(VotingSolution.VOTING_YES.name() + ":" + historyId)
+                .build();
+
+        var no = InlineKeyboardButton.builder()
+                .text(VotingSolution.VOTING_NO.toString())
+                .callbackData(VotingSolution.VOTING_NO.name() + ":" + historyId)
+                .build();
+
+        var yesPrice = InlineKeyboardButton.builder()
+                .text(VotingSolution.VOTING_SET_PRICE_YES.toString())
+                .callbackData(VotingSolution.VOTING_SET_PRICE_YES.name() + ":" + historyId)
+                .build();
+
+        var allFiles = InlineKeyboardButton.builder()
+                .text(ButtonsText.HISTORY_FILES.toString())
+                .callbackData(ButtonsIds.HISTORY_ALL_FILES_BUTTON.name() + ":" + historyId)
+                .build();
+
+        return InlineKeyboardMarkup.builder()
+                .keyboard(List.of(
+                        new InlineKeyboardRow(allFiles),
+                        new InlineKeyboardRow(yes, no),
+                        new InlineKeyboardRow(yesPrice)
+                ))
+                .build();
+    }
+
+    public InlineKeyboardMarkup resultVotes(Long historyId) {
+        var result = InlineKeyboardButton.builder()
+                .text(ButtonsText.RESULT_VOTES.toString())
+                .callbackData(ButtonsIds.HISTORY_RESULTS_VOTES_BUTTON.name() + ":" + historyId)
+                .build();
+
+        return InlineKeyboardMarkup.builder()
+                .keyboard(List.of(new InlineKeyboardRow(result)))
                 .build();
     }
 

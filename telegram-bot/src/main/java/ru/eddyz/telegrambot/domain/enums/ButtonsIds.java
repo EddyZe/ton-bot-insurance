@@ -36,4 +36,8 @@ public enum ButtonsIds {
     HISTORY_ALL_FILES_BUTTON,
     HISTORY_EDIT_BUTTON,
 
+    HISTORY_RESULTS_VOTES_BUTTON,
+
+    //
+
 }

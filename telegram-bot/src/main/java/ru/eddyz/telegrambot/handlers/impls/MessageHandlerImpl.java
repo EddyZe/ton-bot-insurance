@@ -26,6 +26,7 @@ public class MessageHandlerImpl implements MessageHandler {
     private final AddHistoryCommand addHistoryCommand;
     private final OpenHistoryListCommand openHistoryListCommand;
     private final SetPaymentAmountCommand setPaymentAmountCommand;
+    private final EditDescriptionHistoryCommand editDescriptionHistoryCommand;
 
     @Override
     public void handle(Message message) {
@@ -82,6 +83,7 @@ public class MessageHandlerImpl implements MessageHandler {
 
         if (message.getChat().getType().equals("private")) {
             if (text.equals("/start")) {
+                DataStore.currentCommand.remove(message.getChatId());
                 startCommand.execute(message);
                 return;
             }
@@ -142,6 +144,11 @@ public class MessageHandlerImpl implements MessageHandler {
 
                 if (currentCommand.equals(ButtonsIds.HISTORY_PRICE_BUTTON.name())) {
                     setPaymentAmountCommand.execute(message);
+                    return;
+                }
+
+                if (currentCommand.equals(ButtonsIds.HISTORY_EDIT_BUTTON.name())) {
+                    editDescriptionHistoryCommand.execute(message);
                 }
             }
         }

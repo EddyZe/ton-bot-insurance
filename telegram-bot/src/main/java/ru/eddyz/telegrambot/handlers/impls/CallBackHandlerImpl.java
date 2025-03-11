@@ -31,6 +31,8 @@ public class CallBackHandlerImpl implements CallBackHandler {
     private final OpenAllFilesHistory openAllFilesHistory;
     private final DeleteHistoryCommand deleteHistoryCommand;
     private final SetPaymentAmountCommand setPaymentAmountCommand;
+    private final EditDescriptionHistoryCommand editDescriptionHistoryCommand;
+    private final PublishHistoryCommand publishHistoryCommand;
 
 
     @Override
@@ -160,6 +162,17 @@ public class CallBackHandlerImpl implements CallBackHandler {
 
         if (data.startsWith(ButtonsIds.HISTORY_PRICE_BUTTON.name())) {
             setPaymentAmountCommand.execute(callbackQuery);
+            return;
+        }
+
+        if (data.startsWith(ButtonsIds.HISTORY_EDIT_BUTTON.name())) {
+            editDescriptionHistoryCommand.execute(callbackQuery);
+            return;
+        }
+
+        if (data.startsWith(ButtonsIds.HISTORY_PUBLISH_BUTTON.name())) {
+            publishHistoryCommand.execute(callbackQuery);
+            return;
         }
     }
 

@@ -8,7 +8,6 @@ import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMediaGroup;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
-import org.telegram.telegrambots.meta.api.objects.ReplyParameters;
 import org.telegram.telegrambots.meta.api.objects.media.InputMediaDocument;
 import org.telegram.telegrambots.meta.api.objects.media.InputMediaPhoto;
 import org.telegram.telegrambots.meta.api.objects.media.InputMediaVideo;
@@ -34,7 +33,7 @@ public class OpenAllFilesHistoryImpl implements OpenAllFilesHistory {
     @Override
     @Transactional
     public void execute(CallbackQuery callbackQuery) {
-        var chatId = callbackQuery.getMessage().getChatId();
+        var chatId = callbackQuery.getFrom().getId();
         var dataSplit = callbackQuery.getData().split(":");
 
         answerCallBack(callbackQuery.getId());
@@ -117,10 +116,10 @@ public class OpenAllFilesHistoryImpl implements OpenAllFilesHistory {
         var sendMedia = SendMediaGroup.builder()
                 .chatId(chatId)
                 .medias(mediaList)
-                .replyParameters(ReplyParameters.builder()
-                        .chatId(chatId)
-                        .messageId(messageId)
-                        .build())
+//                .replyParameters(ReplyParameters.builder()
+//                        .chatId(chatId)
+//                        .messageId(messageId)
+//                        .build())
                 .build();
 
         try {

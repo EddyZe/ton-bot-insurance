@@ -41,7 +41,7 @@ public class History {
     @OneToMany(mappedBy = "history", cascade =  CascadeType.REMOVE)
     private List<Vote> votes;
 
-    @OneToMany(mappedBy = "history", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "history", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private List<HistoryFile> files;
 
     @ManyToOne

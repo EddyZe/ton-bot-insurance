@@ -168,7 +168,7 @@ public class AddHistoryCommandImpl implements AddHistoryCommand {
         }
 
         var newHistory = History.builder()
-                .historyStatus(HistoryStatus.AWAITING)
+                .historyStatus(HistoryStatus.AWAITING_PUBLISH)
                 .description(caption)
                 .approve(false)
                 .amount(0.)

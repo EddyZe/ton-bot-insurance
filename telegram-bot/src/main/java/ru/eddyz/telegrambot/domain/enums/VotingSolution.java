@@ -1,5 +1,17 @@
 package ru.eddyz.telegrambot.domain.enums;
 
 public enum VotingSolution {
-    YES, NO
+    VOTING_YES("Одобрить ✅"), VOTING_NO("Отклонить ❌"),
+    VOTING_SET_PRICE_YES("Одобрить с другой суммой ✅");
+
+    private final String result;
+
+    VotingSolution(String result) {
+        this.result = result;
+    }
+
+    @Override
+    public String toString() {
+        return this.result;
+    }
 }

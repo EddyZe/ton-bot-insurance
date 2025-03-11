@@ -31,7 +31,10 @@ public enum ButtonsText {
     HISTORY_PRICE("Установить сумму выплаты 💵"),
     HISTORY_FILES("Посмотреть все файлы 📂"),
     EDIT("Редактировать 📃"),
-    REMOVE("Удалить ❌")
+    REMOVE("Удалить ❌"),
+
+    RESULT_VOTES("Посмотреть результаты голосования 🔢")
+
     ;
     private final String cmd;
 
