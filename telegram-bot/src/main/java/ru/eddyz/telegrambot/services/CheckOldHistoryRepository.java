@@ -14,6 +14,7 @@ import ru.eddyz.telegrambot.repositories.HistoryRepository;
 import ru.eddyz.telegrambot.util.Sender;
 
 import java.time.LocalDateTime;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
@@ -28,7 +29,7 @@ public class CheckOldHistoryRepository {
     private Integer period;
 
     @Transactional
-    @Scheduled(fixedRate = 1000 * 60 * 10)
+    @Scheduled(fixedRate = 20, timeUnit = TimeUnit.MINUTES)
     public void checkOldHistory() {
         historyRepository.findAll()
                 .forEach(history -> {

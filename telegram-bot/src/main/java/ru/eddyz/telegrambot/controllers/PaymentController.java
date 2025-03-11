@@ -3,12 +3,10 @@ package ru.eddyz.telegrambot.controllers;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.glassfish.grizzly.http.util.HttpStatus;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
 import ru.eddyz.telegrambot.clients.tonapi.ton.exception.TONAPIBadRequestError;
@@ -32,6 +30,7 @@ import java.util.Optional;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("payment")
 public class PaymentController {
 
     private final UserRepository userRepository;
@@ -44,9 +43,15 @@ public class PaymentController {
     @Value("${insurance.token.name}")
     private String tokenName;
 
+    @Value("${telegram.bot_token}")
 
-    @PostMapping("payment")
-    public ResponseEntity<?> payment(@RequestBody PaymentPayload paymentPayload) {
+
+    @PostMapping("/{botToken}")
+    public ResponseEntity<?> payment(@RequestBody PaymentPayload paymentPayload, @PathVariable String botToken) {
+        if (botToken == null || botToken.isEmpty() || !botToken.equals(tokenName))
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "invalid token"));
+
         try {
             var resp = tonapi.getBlockchain().getTransactionData(paymentPayload.getTxHash());
             var chatIdUser = getCommentFromTransfer(resp);
@@ -99,7 +104,7 @@ public class PaymentController {
         }
 
 
-        return ResponseEntity.ok(HttpStatus.OK_200);
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
     private String getCommentFromTransfer(Transaction transaction) {

@@ -189,6 +189,11 @@ public class CallBackHandlerImpl implements CallBackHandler {
 
         if (data.startsWith(VotingSolution.VOTING_SET_PRICE_YES.name())) {
             voteCommand.vote(callbackQuery, VotingSolution.VOTING_SET_PRICE_YES);
+            return;
+        }
+
+        if (data.startsWith(ButtonsIds.HISTORY_RESULTS_VOTES_BUTTON.name())) {
+            //TODO Реализовать просмотр результатов
         }
     }
 
