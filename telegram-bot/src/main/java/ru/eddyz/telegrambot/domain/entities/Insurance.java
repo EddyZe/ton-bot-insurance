@@ -3,10 +3,8 @@ package ru.eddyz.telegrambot.domain.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Table(name = "insurance")
 @Entity
@@ -32,7 +30,7 @@ public class Insurance {
     @Column(nullable = false)
     private String currency;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 

@@ -27,6 +27,10 @@ public class CallBackHandlerImpl implements CallBackHandler {
     private final HistoryPayments historyPayments;
     private final BuyInsuranceCommand buyInsuranceCommand;
     private final HistoryInsuranceCommand historyInsuranceCommand;
+    private final OpenHistoryListCommand openHistoryListCommand;
+    private final OpenAllFilesHistory openAllFilesHistory;
+    private final DeleteHistoryCommand deleteHistoryCommand;
+    private final SetPaymentAmountCommand setPaymentAmountCommand;
 
 
     @Override
@@ -122,6 +126,40 @@ public class CallBackHandlerImpl implements CallBackHandler {
             DataStore.currentPageHistoryInsurance.remove(chatId);
             deleteMessage(chatId, messageId);
             return;
+        }
+
+        if (data.equals(ButtonsIds.HISTORY_NEXT_BUTTON.name())) {
+            deleteMessage(chatId, callbackQuery.getMessage().getMessageId());
+            openHistoryListCommand.nextPage(chatId);
+            openHistoryListCommand.execute(callbackQuery);
+            return;
+        }
+
+        if (data.equals(ButtonsIds.HISTORY_PREV_BUTTON.name())) {
+            deleteMessage(chatId, callbackQuery.getMessage().getMessageId());
+            openHistoryListCommand.prevPage(chatId);
+            openHistoryListCommand.execute(callbackQuery);
+            return;
+        }
+
+        if (data.equals(ButtonsIds.HISTORY_CLOSE.name())) {
+            DataStore.currentPageHistoryInsurance.remove(chatId);
+            deleteMessage(chatId, callbackQuery.getMessage().getMessageId());
+            return;
+        }
+
+        if (data.startsWith(ButtonsIds.HISTORY_ALL_FILES_BUTTON.name())) {
+            openAllFilesHistory.execute(callbackQuery);
+            return;
+        }
+
+        if (data.startsWith(ButtonsIds.HISTORY_REMOVE_BUTTON.name())) {
+            deleteHistoryCommand.execute(callbackQuery);
+            return;
+        }
+
+        if (data.startsWith(ButtonsIds.HISTORY_PRICE_BUTTON.name())) {
+            setPaymentAmountCommand.execute(callbackQuery);
         }
     }
 

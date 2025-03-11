@@ -93,12 +93,16 @@ public class InlineKey {
 
     private InlineKeyboardMarkup generatePageMenuButton(int totalPages, int currentPage, InlineKeyboardButton next, InlineKeyboardButton previous, InlineKeyboardButton close) {
         var rows = new ArrayList<InlineKeyboardRow>();
+        var nextAndPrev = new ArrayList<InlineKeyboardButton>();
 
         if (currentPage > 0 && currentPage < totalPages)
-            rows.add(new InlineKeyboardRow(previous));
+            nextAndPrev.add(previous);
 
         if (currentPage < totalPages - 1)
-            rows.add(new InlineKeyboardRow(next));
+            nextAndPrev.add(next);
+
+        if (!nextAndPrev.isEmpty())
+            rows.add(new InlineKeyboardRow(nextAndPrev));
 
         rows.add(new InlineKeyboardRow(close));
 
@@ -118,7 +122,7 @@ public class InlineKey {
                 .callbackData(ButtonsIds.INSURANCE_HISTORY.name())
                 .build();
 
-        var close =  InlineKeyboardButton.builder()
+        var close = InlineKeyboardButton.builder()
                 .text(ButtonsText.CLOSE.toString())
                 .callbackData(ButtonsIds.INSURANCE_CLOSE.name())
                 .build();
@@ -148,6 +152,55 @@ public class InlineKey {
                 .build();
 
         return generatePageMenuButton(totalPages, currentPage, next, previous, close);
+    }
+
+    public InlineKeyboardMarkup historyList(int totalPages, int currentPage, long historyId) {
+        var publish = InlineKeyboardButton.builder()
+                .text(ButtonsText.PUBLISH.toString())
+                .callbackData(ButtonsIds.HISTORY_PUBLISH_BUTTON.name() + ":" + historyId)
+                .build();
+        var allFiles = InlineKeyboardButton.builder()
+                .text(ButtonsText.HISTORY_FILES.toString())
+                .callbackData(ButtonsIds.HISTORY_ALL_FILES_BUTTON.name() + ":" + historyId)
+                .build();
+        var price = InlineKeyboardButton.builder()
+                .text(ButtonsText.HISTORY_PRICE.toString())
+                .callbackData(ButtonsIds.HISTORY_PRICE_BUTTON.name() + ":" + historyId)
+                .build();
+        var edit = InlineKeyboardButton.builder()
+                .text(ButtonsText.EDIT.toString())
+                .callbackData(ButtonsIds.HISTORY_EDIT_BUTTON.name() + ":" + historyId)
+                .build();
+        var next = InlineKeyboardButton.builder()
+                .text(ButtonsText.NEXT_BUTTON.toString())
+                .callbackData(ButtonsIds.HISTORY_NEXT_BUTTON.name())
+                .build();
+        var previous = InlineKeyboardButton.builder()
+                .text(ButtonsText.PREV_BUTTON.toString())
+                .callbackData(ButtonsIds.HISTORY_PREV_BUTTON.name())
+                .build();
+        var delete = InlineKeyboardButton.builder()
+                .text(ButtonsText.REMOVE.toString())
+                .callbackData(ButtonsIds.HISTORY_REMOVE_BUTTON.name() + ":" + historyId)
+                .build();
+        var close = InlineKeyboardButton.builder()
+                .text(ButtonsText.CLOSE.toString())
+                .callbackData(ButtonsIds.HISTORY_CLOSE.name())
+                .build();
+
+        var nextAndPrevious = generatePageMenuButton(totalPages, currentPage, next, previous, close).getKeyboard();
+
+        var rows = new ArrayList<>(List.of(
+                new InlineKeyboardRow(publish),
+                new InlineKeyboardRow(price),
+                new InlineKeyboardRow(allFiles, edit),
+                new InlineKeyboardRow(delete)));
+
+        rows.addAll(nextAndPrevious);
+
+        return InlineKeyboardMarkup.builder()
+                .keyboard(rows)
+                .build();
     }
 
 }

@@ -23,14 +23,17 @@ public class Vote {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private VotingSolution  solution;
+
+    @Column(nullable = false)
+    private Double amount;
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "history_id", referencedColumnName = "id")
     private History history;
 

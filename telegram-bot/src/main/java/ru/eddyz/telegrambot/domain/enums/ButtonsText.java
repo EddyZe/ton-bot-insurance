@@ -7,6 +7,7 @@ public enum ButtonsText {
     PAYMENTS("История платежей 💸"),
     INSURANCE("Страховка 📃"),
     ADD_HISTORY("Отправить историю ➕"),
+    MY_HISTORY("Мои истории 📁"),
 
 
     //inline
@@ -23,7 +24,15 @@ public enum ButtonsText {
 
     //insurance
     BUY_INSURANCE("Купить страховку %s %s 💵"),
-    HISTORY_INSURANCE("История покупок страховки 📂");
+    HISTORY_INSURANCE("История покупок страховки 📂"),
+
+    /// /////////////
+    PUBLISH("Опубликовать ➕"),
+    HISTORY_PRICE("Установить сумму выплаты 💵"),
+    HISTORY_FILES("Посмотреть все файлы 📂"),
+    EDIT("Редактировать 📃"),
+    REMOVE("Удалить ❌")
+    ;
     private final String cmd;
 
     ButtonsText(String cmd) {

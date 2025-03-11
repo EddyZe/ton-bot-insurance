@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.message.Message;
@@ -44,7 +43,7 @@ public class WithdrawCommandImpl implements WithdrawCommand {
     @Override
     public void execute(CallbackQuery callbackQuery) {
         var chatId = callbackQuery.getMessage().getChatId();
-        DataStore.currentCommand.put(chatId, ButtonsIds.WITHDRAW_MONEY);
+        DataStore.currentCommand.put(chatId, ButtonsIds.WITHDRAW_MONEY.name());
 
         editMessage(chatId, callbackQuery.getMessage().getMessageId(), "Введите сумму, которую хотите снять:");
 

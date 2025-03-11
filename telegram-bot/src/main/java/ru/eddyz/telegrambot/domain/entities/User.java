@@ -34,19 +34,19 @@ public class User {
     @Column(nullable = false)
     private Boolean active;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
     private Wallet wallet;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Insurance> insurance;
 
     @OneToMany(mappedBy = "user")
     private List<Vote> votes;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Payment> payments;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<History> histories;
 
     @OneToMany(mappedBy = "user")

@@ -30,7 +30,7 @@ public class Payment {
     @Column(nullable = false)
     private String hash;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 }

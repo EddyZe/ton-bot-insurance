@@ -3,8 +3,8 @@ package ru.eddyz.telegrambot.domain.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import ru.eddyz.telegrambot.domain.enums.HistoryFileType;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -25,14 +25,18 @@ public class HistoryFile {
 
     private String telegramFileGroup;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private HistoryFileType fileType;
+
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "history_file_id", referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(name = "history_id", referencedColumnName = "id")
     private History history;
 }

@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface HistoryFilesRepository extends JpaRepository<HistoryFile, Long> {
 
-    List<HistoryFile> findByTelegramFileId(String telegramFileId);
+    List<HistoryFile> findByTelegramFileGroup(String telegramFileId);
 }

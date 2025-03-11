@@ -33,10 +33,10 @@ public class Wallet {
     @Column(nullable = false)
     private Double balance;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    @OneToMany(mappedBy = "wallet")
+    @OneToMany(mappedBy = "wallet", cascade =  CascadeType.REMOVE)
     private List<Withdraw> withdraws;
 }

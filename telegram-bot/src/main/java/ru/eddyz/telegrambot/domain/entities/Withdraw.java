@@ -3,8 +3,6 @@ package ru.eddyz.telegrambot.domain.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.checkerframework.checker.units.qual.C;
-import org.springframework.cglib.core.Local;
 import ru.eddyz.telegrambot.domain.enums.WithdrawStatus;
 
 import java.time.LocalDateTime;
@@ -34,11 +32,11 @@ public class Withdraw {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "wallet_id", referencedColumnName = "id")
     private Wallet wallet;
 }

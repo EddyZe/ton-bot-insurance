@@ -38,13 +38,13 @@ public class History {
     @Column(nullable = false)
     private HistoryStatus historyStatus;
 
-    @OneToMany(mappedBy = "history")
+    @OneToMany(mappedBy = "history", cascade =  CascadeType.REMOVE)
     private List<Vote> votes;
 
-    @OneToMany(mappedBy = "history")
+    @OneToMany(mappedBy = "history", cascade = CascadeType.REMOVE)
     private List<HistoryFile> files;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 }

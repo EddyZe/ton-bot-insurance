@@ -4,7 +4,7 @@ public enum HistoryStatus {
 
     PUBLISH("Опубликована"),
     DECLINE("Отклонена"),
-    AWAITING("На проверке");
+    AWAITING("Ожидает публикации");
 
     private final String status;
 
