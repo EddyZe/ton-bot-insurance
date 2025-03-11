@@ -7,6 +7,7 @@ import org.telegram.telegrambots.meta.api.objects.message.Message;
 import ru.eddyz.telegrambot.commands.*;
 import ru.eddyz.telegrambot.domain.enums.ButtonsIds;
 import ru.eddyz.telegrambot.domain.enums.ButtonsText;
+import ru.eddyz.telegrambot.domain.enums.VotingSolution;
 import ru.eddyz.telegrambot.handlers.MessageHandler;
 import ru.eddyz.telegrambot.util.DataStore;
 
@@ -27,6 +28,7 @@ public class MessageHandlerImpl implements MessageHandler {
     private final OpenHistoryListCommand openHistoryListCommand;
     private final SetPaymentAmountCommand setPaymentAmountCommand;
     private final EditDescriptionHistoryCommand editDescriptionHistoryCommand;
+    private final VoteCommand voteCommand;
 
     @Override
     public void handle(Message message) {
@@ -149,6 +151,11 @@ public class MessageHandlerImpl implements MessageHandler {
 
                 if (currentCommand.equals(ButtonsIds.HISTORY_EDIT_BUTTON.name())) {
                     editDescriptionHistoryCommand.execute(message);
+                    return;
+                }
+
+                if (currentCommand.equals(VotingSolution.VOTING_SET_PRICE_YES.name())) {
+                    voteCommand.execute(message);
                 }
             }
         }

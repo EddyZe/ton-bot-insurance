@@ -8,6 +8,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
 import ru.eddyz.telegrambot.commands.*;
 import ru.eddyz.telegrambot.domain.enums.ButtonsIds;
+import ru.eddyz.telegrambot.domain.enums.VotingSolution;
 import ru.eddyz.telegrambot.handlers.CallBackHandler;
 import ru.eddyz.telegrambot.util.DataStore;
 import ru.eddyz.telegrambot.util.Sender;
@@ -33,6 +34,7 @@ public class CallBackHandlerImpl implements CallBackHandler {
     private final SetPaymentAmountCommand setPaymentAmountCommand;
     private final EditDescriptionHistoryCommand editDescriptionHistoryCommand;
     private final PublishHistoryCommand publishHistoryCommand;
+    private final VoteCommand voteCommand;
 
 
     @Override
@@ -173,6 +175,20 @@ public class CallBackHandlerImpl implements CallBackHandler {
         if (data.startsWith(ButtonsIds.HISTORY_PUBLISH_BUTTON.name())) {
             publishHistoryCommand.execute(callbackQuery);
             return;
+        }
+
+        if (data.startsWith(VotingSolution.VOTING_YES.name())) {
+            voteCommand.vote(callbackQuery, VotingSolution.VOTING_YES);
+            return;
+        }
+
+        if (data.startsWith(VotingSolution.VOTING_NO.name())) {
+            voteCommand.vote(callbackQuery, VotingSolution.VOTING_NO);
+            return;
+        }
+
+        if (data.startsWith(VotingSolution.VOTING_SET_PRICE_YES.name())) {
+            voteCommand.vote(callbackQuery, VotingSolution.VOTING_SET_PRICE_YES);
         }
     }
 

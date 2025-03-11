@@ -29,7 +29,7 @@ insurance:
     symbol: ${INSURANCE_TOKEN_NAME:BARASHEK}
   price: ${INSURANCE_PRICE:1000}
   period: ${INSURANCE_DAYS:30}
-  vote_period: ${INSURANCE_VOTE_MINUTE:1}
+  vote_period: ${INSURANCE_VOTE_MINUTE:2}
   admin_wallet: ${INSURANCE_ADMIN_WALLET:UQDcPT9cxG6idvFG5inOSHc8fc1EZJ1VROF_DKNiDY7hP4S-}
   minimal_tokens: ${INSURANCE_MINIMAL_TOKENS:1}
 
