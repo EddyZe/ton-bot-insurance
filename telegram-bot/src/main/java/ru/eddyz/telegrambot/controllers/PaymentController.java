@@ -44,11 +44,13 @@ public class PaymentController {
     private String tokenName;
 
     @Value("${telegram.bot_token}")
+    private String botToken;
 
 
-    @PostMapping("/{botToken}")
-    public ResponseEntity<?> payment(@RequestBody PaymentPayload paymentPayload, @PathVariable String botToken) {
-        if (botToken == null || botToken.isEmpty() || !botToken.equals(tokenName))
+    @PostMapping("{botToken}")
+    public ResponseEntity<?> payment(@PathVariable(value = "botToken", required = false) String botToken,
+                                     @RequestBody PaymentPayload paymentPayload) {
+        if (botToken == null || botToken.isEmpty() || !botToken.equals(this.botToken))
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(Map.of("error", "invalid token"));
 
@@ -102,9 +104,8 @@ public class PaymentController {
         } catch (TONAPIBadRequestError e) {
             log.error("TONAPIBadRequestError ", e);
         }
-
-
-        return ResponseEntity.ok(HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(Map.of("status", "OK"));
     }
 
     private String getCommentFromTransfer(Transaction transaction) {

@@ -35,6 +35,7 @@ public class CallBackHandlerImpl implements CallBackHandler {
     private final EditDescriptionHistoryCommand editDescriptionHistoryCommand;
     private final PublishHistoryCommand publishHistoryCommand;
     private final VoteCommand voteCommand;
+    private final ShowResultVoteCommand showResultVoteCommand;
 
 
     @Override
@@ -193,7 +194,7 @@ public class CallBackHandlerImpl implements CallBackHandler {
         }
 
         if (data.startsWith(ButtonsIds.HISTORY_RESULTS_VOTES_BUTTON.name())) {
-            //TODO Реализовать просмотр результатов
+            showResultVoteCommand.execute(callbackQuery);
         }
     }
 

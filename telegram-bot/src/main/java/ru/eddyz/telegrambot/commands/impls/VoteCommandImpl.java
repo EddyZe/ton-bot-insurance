@@ -103,6 +103,7 @@ public class VoteCommandImpl implements VoteCommand {
             telegramClient.execute(AnswerCallbackQuery.builder()
                     .text(message)
                     .callbackQueryId(id)
+                    .cacheTime(5)
                     .build());
         } catch (TelegramApiException e) {
             log.error("error answer callback from VoteCommand", e);
@@ -165,18 +166,24 @@ public class VoteCommandImpl implements VoteCommand {
             return;
         }
 
-        var newVote = Vote.builder()
-                .user(user.get())
-                .createdAt(LocalDateTime.now())
-                .history(history.get())
-                .amount(history.get().getAmount())
-                .solution(VotingSolution.VOTING_SET_PRICE_YES)
-                .build();
 
-        voteRepository.save(newVote);
-        sendMessage(chatId, generateMessage(user.get()));
+        try {
+            var newVote = Vote.builder()
+                    .user(user.get())
+                    .createdAt(LocalDateTime.now())
+                    .history(history.get())
+                    .amount(Double.parseDouble(message.getText()))
+                    .solution(VotingSolution.VOTING_SET_PRICE_YES)
+                    .build();
 
-        currentVoteHistoryId.remove(chatId);
-        DataStore.currentCommand.remove(message.getFrom().getId());
+            voteRepository.save(newVote);
+            sendMessage(chatId, generateMessage(user.get()));
+
+            currentVoteHistoryId.remove(chatId);
+            DataStore.currentCommand.remove(message.getFrom().getId());
+        } catch (NumberFormatException e) {
+            log.error("error send message to VoteCommand", e);
+            sendMessage(chatId, "Отправляйте только числа!");
+        }
     }
 }

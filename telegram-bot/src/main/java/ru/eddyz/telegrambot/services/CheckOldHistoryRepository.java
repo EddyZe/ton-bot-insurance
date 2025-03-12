@@ -11,6 +11,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
 import ru.eddyz.telegrambot.domain.enums.HistoryStatus;
 import ru.eddyz.telegrambot.repositories.HistoryRepository;
+import ru.eddyz.telegrambot.util.InlineKey;
 import ru.eddyz.telegrambot.util.Sender;
 
 import java.time.LocalDateTime;
@@ -24,18 +25,19 @@ public class CheckOldHistoryRepository {
     private final TelegramClient telegramClient;
     private final HistoryRepository historyRepository;
     private final PublisherService publisherService;
+    private final InlineKey inlineKey;
 
     @Value("${insurance.vote_period}")
     private Integer period;
 
     @Transactional
-    @Scheduled(fixedRate = 20, timeUnit = TimeUnit.MINUTES)
+    @Scheduled(fixedRate = 10, timeUnit = TimeUnit.MINUTES)
     public void checkOldHistory() {
-        historyRepository.findAll()
+        historyRepository.findByHistoryStatus(HistoryStatus.PUBLISH)
                 .forEach(history -> {
                     var endDate = LocalDateTime.now().minusMinutes(period);
 
-                    if (endDate.isAfter(history.getUpdatedAt()) && history.getHistoryStatus() == HistoryStatus.PUBLISH) {
+                    if (endDate.isAfter(history.getUpdatedAt())) {
                         history.setUpdatedAt(endDate);
                         history.setHistoryStatus(HistoryStatus.AWAITING_APPROVED);
                         historyRepository.save(history);
@@ -44,7 +46,8 @@ public class CheckOldHistoryRepository {
                             telegramClient.execute(
                                     Sender.sendMessage(
                                             history.getUser().getTelegramChatId(),
-                                            publisherService.generateResultMessage(history)));
+                                            publisherService.generateResultMessage(history),
+                                            inlineKey.resultVotes(history.getId())));
                         } catch (TelegramApiException e) {
                             log.error(e.getMessage());
                         }
