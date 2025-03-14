@@ -63,6 +63,8 @@ public class MainView extends AppLayout {
         nav.addItem(new SideNavItem("Все истории", "histories", VaadinIcon.ARCHIVE.create()));
         nav.addItem(new SideNavItem("История платежей", "payments", VaadinIcon.MONEY_DEPOSIT.create()));
         nav.addItem(new SideNavItem("Выплаты", "withdraws", VaadinIcon.MONEY_WITHDRAW.create()));
+        nav.addItem(new SideNavItem("Истории ждут одобрения", "approvedHistories", VaadinIcon.BOOK.create()));
+        nav.addItem(new SideNavItem("История покупок страховки", "insurances", VaadinIcon.TOOLBOX.create()));
 
         return nav;
     }

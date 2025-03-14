@@ -3,6 +3,7 @@ package util;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.datetimepicker.DateTimePicker;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -13,11 +14,13 @@ import com.vaadin.flow.component.virtuallist.VirtualList;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.RouterLink;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
 import ru.eddyz.adminpanel.components.Video;
 import ru.eddyz.adminpanel.domain.entities.History;
+import ru.eddyz.adminpanel.domain.entities.Insurance;
 import ru.eddyz.adminpanel.domain.entities.Payment;
 import ru.eddyz.adminpanel.domain.entities.Withdraw;
 import ru.eddyz.adminpanel.domain.enums.WithdrawStatus;
@@ -38,71 +41,74 @@ public class Render {
         historiesList.setItems(histories
                 .stream()
                 .sorted(((o1, o2) -> o2.getCreatedAt().compareTo(o1.getCreatedAt()))));
-        historiesList.setRenderer(new ComponentRenderer<Component, History>(history -> {
-            var historyBlock = new VerticalLayout();
-            historyBlock.setClassName("custom-media-card");
-            historyBlock.setWidth("90%");
-
-            RouterLink historyLonk = new RouterLink("Перейти в настройки истории", HistroryView.class, history.getId().toString());
-            historyBlock.add(historyLonk);
-
-            RouterLink userLink = new RouterLink("%s".formatted(history.getUser().getUsername()), UserView.class, history.getUser().getId().toString());
-            historyBlock.add(userLink);
-
-            var status = new TextField("Статус");
-            status.setWidth("100%");
-            status.setValue(history.getHistoryStatus().toString());
-            status.setReadOnly(true);
-            historyBlock.add(status);
-
-            var amountAndCurrency = new TextField("Желаемая сумма");
-            amountAndCurrency.setWidth("100%");
-            amountAndCurrency.setReadOnly(true);
-            amountAndCurrency.setValue("%s %s".formatted(history.getAmount(), history.getCurrency()));
-            historyBlock.add(amountAndCurrency);
-
-            if (history.getFiles() != null && !history.getFiles().isEmpty()) {
-                history.getFiles()
-                        .stream()
-                        .findFirst()
-                        .ifPresent(f -> {
-                            if (f.getFilePaths() != null) {
-                                var fl = f.getFilePaths().getFirst();
-                                var streamResource = ResourseHelper.getStreamResource("История", fl.getPath());
-
-                                switch (f.getFileType()) {
-                                    case PHOTO -> {
-                                        Image image = new Image(streamResource, "Фото");
-                                        image.setMaxHeight(height);
-                                        image.setMaxWidth(width);
-                                        image.setHeight("auto");
-                                        image.setWidth("auto");
-                                        historyBlock.add(image);
-                                    }
-                                    case VIDEO -> {
-                                        Video video = new Video(streamResource, "Видео");
-                                        video.setHeight(height);
-                                        video.setWidth(width);
-                                        video.setMaxHeight(height);
-                                        video.setMaxWidth(width);
-                                        historyBlock.add(video);
-                                    }
-                                }
-
-                            }
-                        });
-            }
-
-            var desc = new TextArea();
-            desc.setReadOnly(true);
-            desc.setWidth("100%");
-            desc.setHeight("150px");
-            desc.setValue(history.getDescription());
-            historyBlock.add(desc);
-
-            return historyBlock;
-        }));
+        historiesList.setRenderer(new ComponentRenderer<Component, History>(history -> createRenderHistory(width, height, history)));
         return historiesList;
+    }
+
+    @NotNull
+    public static VerticalLayout createRenderHistory(String width, String height, History history) {
+        var historyBlock = new VerticalLayout();
+        historyBlock.setClassName("custom-media-card");
+        historyBlock.setWidth("90%");
+
+        RouterLink historyLonk = new RouterLink("Перейти в настройки истории", HistroryView.class, history.getId().toString());
+        historyBlock.add(historyLonk);
+
+        RouterLink userLink = new RouterLink("%s".formatted(history.getUser().getUsername()), UserView.class, history.getUser().getId().toString());
+        historyBlock.add(userLink);
+
+        var status = new TextField("Статус");
+        status.setWidth("100%");
+        status.setValue(history.getHistoryStatus().toString());
+        status.setReadOnly(true);
+        historyBlock.add(status);
+
+        var amountAndCurrency = new TextField("Желаемая сумма");
+        amountAndCurrency.setWidth("100%");
+        amountAndCurrency.setReadOnly(true);
+        amountAndCurrency.setValue("%s %s".formatted(history.getAmount(), history.getCurrency()));
+        historyBlock.add(amountAndCurrency);
+
+        if (history.getFiles() != null && !history.getFiles().isEmpty()) {
+            history.getFiles()
+                    .stream()
+                    .findFirst()
+                    .ifPresent(f -> {
+                        if (f.getFilePaths() != null) {
+                            var fl = f.getFilePaths().getFirst();
+                            var streamResource = ResourseHelper.getStreamResource("История", fl.getPath());
+
+                            switch (f.getFileType()) {
+                                case PHOTO -> {
+                                    Image image = new Image(streamResource, "Фото");
+                                    image.setMaxHeight(height);
+                                    image.setMaxWidth(width);
+                                    image.setHeight("auto");
+                                    image.setWidth("auto");
+                                    historyBlock.add(image);
+                                }
+                                case VIDEO -> {
+                                    Video video = new Video(streamResource, "Видео");
+                                    video.setHeight(height);
+                                    video.setWidth(width);
+                                    video.setMaxHeight(height);
+                                    video.setMaxWidth(width);
+                                    historyBlock.add(video);
+                                }
+                            }
+
+                        }
+                    });
+        }
+
+        var desc = new TextArea();
+        desc.setReadOnly(true);
+        desc.setWidth("100%");
+        desc.setHeight("150px");
+        desc.setValue(history.getDescription());
+        historyBlock.add(desc);
+
+        return historyBlock;
     }
 
     public static VirtualList<Payment> cratePaymentList(List<Payment> payment) {
@@ -247,5 +253,40 @@ public class Render {
         } catch (TelegramApiException ex) {
             log.error("Ошибка при отправке сообщения!", ex);
         }
+    }
+
+    public static FormLayout createInsuranceRender(Insurance insurance) {
+        var insuranceCard = new FormLayout();
+
+        var active = new TextField("Активна");
+        active.setReadOnly(true);
+        active.setWidth("100%");
+        active.setValue(insurance.getActive().toString());
+        insuranceCard.add(active);
+
+        var priceLayout = new TextField("Цена");
+        priceLayout.setReadOnly(true);
+        priceLayout.setWidth("100%");
+        priceLayout.setValue("%s %s".formatted(insurance.getAmount().toString(), insurance.getCurrency()));
+        insuranceCard.add(priceLayout);
+
+        var startData = new DateTimePicker("Дата покупки");
+        startData.setReadOnly(true);
+        startData.setWidth("100%");
+        startData.setValue(insurance.getStartDate());
+        insuranceCard.add(startData);
+
+        var endTime = new DateTimePicker("Окончание страховки");
+        endTime.setReadOnly(true);
+        endTime.setWidth("100%");
+        endTime.setValue(insurance.getEndDate());
+        insuranceCard.add(endTime);
+
+        insuranceCard.setResponsiveSteps(new FormLayout.ResponsiveStep("0", 2));
+        insuranceCard.setColspan(active, 1);
+        insuranceCard.setColspan(priceLayout, 1);
+        insuranceCard.setColspan(startData, 1);
+        insuranceCard.setColspan(endTime, 1);
+        return insuranceCard;
     }
 }

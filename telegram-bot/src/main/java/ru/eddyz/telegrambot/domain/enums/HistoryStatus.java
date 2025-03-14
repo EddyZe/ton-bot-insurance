@@ -6,6 +6,7 @@ import lombok.Getter;
 public enum HistoryStatus {
 
     PUBLISH("Опубликована"),
+    APPROVED("Одобрена"),
     DECLINE("Отклонена"),
     AWAITING_PUBLISH("Ожидает публикации"),
     AWAITING_APPROVED("Ожидает окончательного решения"),

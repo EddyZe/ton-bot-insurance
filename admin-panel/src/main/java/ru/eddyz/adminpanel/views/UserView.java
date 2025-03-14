@@ -1,10 +1,7 @@
 package ru.eddyz.adminpanel.views;
 
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.datepicker.DatePicker;
-import com.vaadin.flow.component.datetimepicker.DateTimePicker;
-import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -141,28 +138,30 @@ public class UserView extends HorizontalLayout implements HasUrlParameter<String
         username.setReadOnly(true);
         username.setWidth("100%");
         username.setValue(user.getUsername());
+        userInfo.add(username);
 
         var telegramId = new TextField("Telegram ID");
         telegramId.setReadOnly(true);
         telegramId.setWidth("100%");
         telegramId.setValue(user.getTelegramChatId().toString());
+        userInfo.add(telegramId);
 
         var createdAt = new DatePicker("Дата регистрации");
         createdAt.setReadOnly(true);
         createdAt.setWidth("100%");
         createdAt.setValue(user.getCreatedAt().toLocalDate());
+        userInfo.add(createdAt);
 
         AtomicReference<Wallet> wallet = new AtomicReference<>(user.getWallet());
-        var walletBlock = new VerticalLayout();
-        walletBlock.setWidth("100%");
+        if (wallet.get() != null) {
+            var walletBlock = new VerticalLayout();
+            walletBlock.setWidth("100%");
 
-        var number = new TextField("Привязанный Ton кошелек");
-        number.setReadOnly(true);
-        number.setWidth("100%");
-        number.setValue(wallet.get().getAccountId());
-        walletBlock.add(number);
-
-        if (wallet.get() == null) {
+            var number = new TextField("Привязанный Ton кошелек");
+            number.setReadOnly(true);
+            number.setWidth("100%");
+            number.setValue(wallet.get().getAccountId() == null ? "Кошелек не привязан" : wallet.get().getAccountId());
+            walletBlock.add(number);
             var balanceBlock = new HorizontalLayout();
             balanceBlock.setSizeFull();
 
@@ -181,6 +180,7 @@ public class UserView extends HorizontalLayout implements HasUrlParameter<String
             balanceBlock.add(editBalanceButton);
 
             walletBlock.add(balanceBlock);
+            userInfo.add(walletBlock);
         }
 
         var insuranceBlock = new VerticalLayout();
@@ -189,11 +189,11 @@ public class UserView extends HorizontalLayout implements HasUrlParameter<String
         var sum = user.getInsurance().stream()
                 .mapToDouble(Insurance::getAmount)
                 .sum();
-        var insurancesHeader = new Span("Купленные страховки. Общая сумма покупок: %s %s".formatted(sum, wallet.get().getToken()));
+        var insurancesHeader = new Span("Купленные страховки. Общая сумма покупок: %s %s".formatted(sum, wallet.get() == null ? "-" : wallet.get().getToken()));
         insuranceBlock.add(insurancesHeader);
         VirtualList<Insurance> insurances = createInsuranceLisit(user);
         insuranceBlock.add(insurances);
-        userInfo.add(username, telegramId, createdAt, walletBlock, insuranceBlock);
+        userInfo.add(insuranceBlock);
     }
 
     @NotNull
@@ -201,41 +201,10 @@ public class UserView extends HorizontalLayout implements HasUrlParameter<String
         VirtualList<Insurance> insurances = new VirtualList<>();
         insurances.setSizeFull();
         insurances.setItems(user.getInsurance());
-        insurances.setRenderer(new ComponentRenderer<Component, Insurance>(insurance -> {
-            var insuranceCard = new FormLayout();
-            insuranceCard.setClassName("custom-media-card");
-
-            var active = new TextField("Активна");
-            active.setReadOnly(true);
-            active.setWidth("100%");
-            active.setValue(insurance.getActive().toString());
-            insuranceCard.add(active);
-
-            var priceLayout = new TextField("Цена");
-            priceLayout.setReadOnly(true);
-            priceLayout.setWidth("100%");
-            priceLayout.setValue("%s %s".formatted(insurance.getAmount().toString(), insurance.getCurrency()));
-            insuranceCard.add(priceLayout);
-
-            var startData = new DateTimePicker("Дата покупки");
-            startData.setReadOnly(true);
-            startData.setWidth("100%");
-            startData.setValue(insurance.getStartDate());
-            insuranceCard.add(startData);
-
-            var endTime = new DateTimePicker("Окончание страховки");
-            endTime.setReadOnly(true);
-            endTime.setWidth("100%");
-            endTime.setValue(insurance.getEndDate());
-            insuranceCard.add(endTime);
-
-            insuranceCard.setResponsiveSteps(new FormLayout.ResponsiveStep("0", 2));
-            insuranceCard.setColspan(active, 1);
-            insuranceCard.setColspan(priceLayout, 1);
-            insuranceCard.setColspan(startData, 1);
-            insuranceCard.setColspan(endTime, 1);
-
-            return insuranceCard;
+        insurances.setRenderer(new ComponentRenderer<>(insurance -> {
+            var def = Render.createInsuranceRender(insurance);
+            def.setClassName("custom-media-card");
+            return def;
         }));
         return insurances;
     }
