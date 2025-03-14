@@ -41,7 +41,7 @@ public class PublisherController {
 
         publisherService.publish(request.getHistoryId(), request.getChatId());
         return ResponseEntity.status(HttpStatus.OK)
-                .body(Map.of("status", "OK", "message", "Publisher successfully published!"));
+                .body(Map.of("status", "OK", "message", "OK"));
     }
 
     @ExceptionHandler(PublisherException.class)

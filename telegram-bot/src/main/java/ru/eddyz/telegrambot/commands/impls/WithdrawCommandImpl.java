@@ -92,6 +92,9 @@ public class WithdrawCommandImpl implements WithdrawCommand {
                 .build();
 
         withdrawRepository.save(withdraw);
+        var wallet = walletOp.get();
+        wallet.setBalance(wallet.getBalance() - amount);
+        walletRepository.save(wallet);
 
         sendMessage(chatId, "Заявка на снятие средств отправлена, вы получите уведомление, как мы обработаем вашу заявку");
 

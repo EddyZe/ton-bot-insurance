@@ -47,9 +47,9 @@ public class MessageHandlerImpl implements MessageHandler {
             return;
         }
 
-        if (message.hasDocument()) {
-            documentCommandHandler(message);
-        }
+//        if (message.hasDocument()) {
+//            documentCommandHandler(message);
+//        }
     }
 
     private void documentCommandHandler(Message message) {
