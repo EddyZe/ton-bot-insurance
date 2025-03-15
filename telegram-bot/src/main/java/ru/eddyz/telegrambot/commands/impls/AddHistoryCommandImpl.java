@@ -77,7 +77,7 @@ public class AddHistoryCommandImpl implements AddHistoryCommand {
 
 
         if (!DataStore.currentCommand.containsKey(chatId) || !currentState.containsKey(chatId)) {
-            sendMessage(chatId, "Отправьте свою историю, так же вы можете прикрепить несколько фото, видео или документ. \n\n❗После отправки истории, добавить файлы будет нельзя.");
+            sendMessage(chatId, "Отправьте свою историю, так же вы можете прикрепить несколько фото или видео. \n\n❗После отправки истории, добавить файлы будет нельзя.");
             DataStore.currentCommand.put(chatId, ButtonsText.ADD_HISTORY.name());
             currentState.put(chatId, AddHistoryState.HISTORY);
             return;
