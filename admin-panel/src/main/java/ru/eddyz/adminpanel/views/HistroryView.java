@@ -212,22 +212,28 @@ public class HistroryView extends VerticalLayout implements HasUrlParameter<Stri
 
         reject.addClickListener(event -> {
             if (checkHistory(history.get())) return;
-            history.set(historyRepository.findById(historyId)
-                    .orElseThrow());
-            history.get().setUpdatedAt(LocalDateTime.now());
-            history.get().setAmount(amount.getValue());
-            history.get().setDescription(description.getValue());
-            history.get().setHistoryStatus(HistoryStatus.DECLINE);
-            historyRepository.saveAndFlush(history.get());
+            var currentStatus = history.get().getHistoryStatus();
+            try {
+                history.set(historyRepository.findById(historyId)
+                        .orElseThrow());
+                history.get().setUpdatedAt(LocalDateTime.now());
+                history.get().setAmount(amount.getValue());
+                history.get().setDescription(description.getValue());
+                history.get().setHistoryStatus(HistoryStatus.DECLINE);
+                historyRepository.saveAndFlush(history.get());
 
-            var resp = publishRequest(history.get());
+                var resp = publishRequest(history.get());
 
-            if (resp == null) {
-                return;
-            }
+                if (resp == null) {
+                    return;
+                }
 
-            if (!resp.getStatus().contains(HttpStatus.OK.toString())) {
-                tasteService.taste(Notification.Position.TOP_CENTER, NotificationVariant.LUMO_ERROR, resp.getMessage());
+                if (!resp.getStatus().contains(HttpStatus.OK.toString())) {
+                    tasteService.taste(Notification.Position.TOP_CENTER, NotificationVariant.LUMO_ERROR, resp.getMessage());
+                    return;
+                }
+            } catch (Exception ex) {
+                errorRequest(ex, history, currentStatus, "Бот не отвечает! Публикаци не была обработана!");
                 return;
             }
 
@@ -236,25 +242,32 @@ public class HistroryView extends VerticalLayout implements HasUrlParameter<Stri
 
         approve.addClickListener(e -> {
             if (checkHistory(history.get())) return;
+            var currentStatus = history.get().getHistoryStatus();
+            try {
 
-            history.set(historyRepository.findById(historyId)
-                    .orElseThrow());
-            history.get().setUpdatedAt(LocalDateTime.now());
-            history.get().setAmount(amount.getValue());
-            history.get().setDescription(description.getValue());
-            history.get().setHistoryStatus(HistoryStatus.PUBLISH);
+                history.set(historyRepository.findById(historyId)
+                        .orElseThrow());
+                history.get().setUpdatedAt(LocalDateTime.now());
+                history.get().setAmount(amount.getValue());
+                history.get().setDescription(description.getValue());
+                history.get().setHistoryStatus(HistoryStatus.PUBLISH);
 
-            historyRepository.saveAndFlush(history.get());
-            var resp = publishRequest(history.get());
+                historyRepository.saveAndFlush(history.get());
 
-            if (resp == null) {
+                var resp = publishRequest(history.get());
+                if (resp == null) {
+                    return;
+                }
+
+                if (!resp.getStatus().equals(HttpStatus.OK.toString())) {
+                    tasteService.taste(Notification.Position.TOP_CENTER, NotificationVariant.LUMO_ERROR, resp.getMessage());
+                    return;
+                }
+            } catch (Exception ex) {
+                errorRequest(ex, history, currentStatus, "Бот не отвечает! Публикация не была обработана!");
                 return;
             }
 
-            if (!resp.getStatus().equals(HttpStatus.OK.toString())) {
-                tasteService.taste(Notification.Position.TOP_CENTER, NotificationVariant.LUMO_ERROR, resp.getMessage());
-                return;
-            }
             tasteService.taste(Notification.Position.TOP_CENTER, NotificationVariant.LUMO_SUCCESS, "Публикация одобрена!");
         });
 
@@ -268,6 +281,13 @@ public class HistroryView extends VerticalLayout implements HasUrlParameter<Stri
             media.setItems(history.get().getFiles());
             media.setRenderer(historyFileRenderer(historyId));
         });
+    }
+
+    private void errorRequest(Exception ex, AtomicReference<History> history, HistoryStatus currentStatus, String message) {
+        log.error("Сервер не смог послать запрос на бота. {}", ex.getMessage());
+        history.get().setHistoryStatus(currentStatus);
+        historyRepository.save(history.get());
+        tasteService.taste(Notification.Position.TOP_CENTER, NotificationVariant.LUMO_ERROR, message);
     }
 
     public Renderer<HistoryFile> historyFileRenderer(Long historyId) {

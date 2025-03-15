@@ -162,6 +162,12 @@ public class Render {
 
             var currentAmount =  withdraw.getAmount();
 
+            var walletId = new TextField("Номер кошелька для перевода");
+            walletId.setReadOnly(true);
+            walletId.setWidthFull();
+            walletId.setValue(withdraw.getWallet() != null ? withdraw.getWallet().getAccountId() : "Кошелек не указан.");
+            withdawBlock.add(walletId);
+
             var amount = new NumberField("Желаемая сумма выплаты в %s".formatted(withdraw.getToken()));
             amount.setValue(currentAmount);
             amount.setWidthFull();
