@@ -6,9 +6,11 @@ import lombok.Getter;
 public enum HistoryStatus {
 
     PUBLISH("Опубликована"),
+    APPROVED("Одобрена"),
     DECLINE("Отклонена"),
     AWAITING_PUBLISH("Ожидает публикации"),
-    AWAITING_APPROVED("Ожидает окончательного решения");
+    AWAITING_APPROVED("Ожидает окончательного решения"),
+    ADMIN_CHECKING("Проходит модерацию");
 
     private final String status;
 

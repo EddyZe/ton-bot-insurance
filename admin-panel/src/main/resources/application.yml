@@ -1,0 +1,41 @@
+spring:
+  security:
+    user:
+      password: ${ADMIN_PASSWORD:admin}
+      name: ${ADMIN_USERNAME:admin}
+  application:
+    name: admin-panel
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/tonbot}
+    username: ${DB_USER:postgres}
+    password: ${DB_PASSWORD:admin}
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        show_sql: false
+    hibernate:
+      ddl-auto: update
+
+telegram:
+  bot_token: ${BOT_TOKEN}
+  bot_url: ${BOT_URL:http://localhost:8085}
+
+server:
+  port: 8086
+  jetty:
+    connection-idle-timeout: 30m
+  servlet:
+    session:
+      timeout: 30m
+  netty:
+    connection-timeout: 30m
+  tomcat:
+    connection-timeout: 30m
+
+vaadin:
+  frontend:
+    hotdeploy: true
+
+
