@@ -26,7 +26,7 @@ ton-api:
 insurance:
   token:
     name: ${INSURANCE_TOKEN_NAME:$Barashek}
-    symbol: ${INSURANCE_TOKEN_NAME:BARASHEK}
+    symbol: ${INSURANCE_TOKEN_SYMBOL:BARASHEK}
   price: ${INSURANCE_PRICE:1000}
   period: ${INSURANCE_DAYS:30}
   vote_period: ${INSURANCE_VOTE_MINUTE:2}
